@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIDI Generator | Alek, with a K</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,8 +15,8 @@
         }
 
         body {
-            background: #f5f3ed;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+            background: #ffffff;
+            font-family: 'Reenie Beanie', cursive;
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
@@ -27,14 +30,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 29px,
-                    rgba(71, 160, 220, 0.3) 29px,
-                    rgba(71, 160, 220, 0.3) 31px
-                );
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: -1;
         }
@@ -48,22 +44,18 @@
 
         h1 {
             font-size: clamp(36px, 8vw, 72px);
-            color: #FF1744;
-            text-shadow:
-                3px 3px 0px #000,
-                5px 5px 0px rgba(0,0,0,0.1);
-            transform: rotate(-2deg);
-            letter-spacing: 3px;
+            color: #1a1a1a;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: opacity 0.2s;
             display: inline-block;
+            font-weight: 700;
         }
 
         h1:hover {
-            transform: rotate(-2deg) scale(1.05);
+            opacity: 0.6;
         }
 
-        /* App container - irregular kid-drawn border */
+        /* App container */
         .app-container {
             max-width: 1600px;
             margin: 40px auto;
@@ -73,35 +65,9 @@
 
         .irregular-box {
             background: white;
-            border: 8px solid #4CAF50;
-            border-radius: 48% 52% 51% 49% / 54% 46% 54% 46%;
             padding: 30px;
-            box-shadow:
-                8px 8px 0px rgba(0,0,0,0.1),
-                0 0 0 2px #fff,
-                0 0 0 10px rgba(76, 175, 80, 0.2);
             position: relative;
             min-height: 800px;
-            transform: rotate(-0.5deg);
-        }
-
-        /* Decorative doodles */
-        .irregular-box::before {
-            content: '🎹';
-            position: absolute;
-            top: -40px;
-            left: 30px;
-            font-size: 56px;
-            transform: rotate(-15deg);
-        }
-
-        .irregular-box::after {
-            content: '♪♫♪';
-            position: absolute;
-            top: -35px;
-            right: 40px;
-            font-size: 40px;
-            color: #4CAF50;
         }
 
         /* Project title */
@@ -112,14 +78,10 @@
 
         .project-title h2 {
             font-size: clamp(32px, 6vw, 56px);
-            color: #4CAF50;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
-            transform: rotate(1deg);
+            color: #1a1a1a;
             display: inline-block;
             padding: 10px 20px;
-            border: 4px solid #4CAF50;
-            border-radius: 45% 55% 50% 50% / 60% 45% 55% 40%;
-            background: rgba(76, 175, 80, 0.1);
+            font-weight: 600;
         }
 
         /* Iframe container */
@@ -139,7 +101,6 @@
             height: 100%;
             border: none;
             background: white;
-            border-radius: 12px;
         }
 
         /* Back button */
@@ -147,28 +108,21 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: #FF9800;
-            border: 5px solid #000;
-            border-radius: 50% 45% 55% 50%;
+            background: transparent;
+            border: none;
             padding: 15px 25px;
             font-size: 24px;
-            font-weight: bold;
-            color: #000;
+            font-weight: 600;
+            color: #1a1a1a;
             text-decoration: none;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: opacity 0.2s;
             z-index: 1000;
-            font-family: 'Comic Sans MS', cursive;
+            font-family: 'Reenie Beanie', cursive;
         }
 
         .back-button:hover {
-            transform: scale(1.05);
-            box-shadow: 7px 7px 0px rgba(0,0,0,0.3);
-        }
-
-        .back-button:active {
-            transform: scale(0.95);
+            opacity: 0.6;
         }
 
         /* Responsive */
@@ -179,7 +133,6 @@
 
             .irregular-box {
                 padding: 20px;
-                border-width: 6px;
             }
 
             .project-title h2 {
