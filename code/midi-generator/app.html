@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI GENERATOR — Learn Music Production</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #E8E3DA;
+            color: #1A1A1A;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            margin-bottom: 60px;
+            border-bottom: 2px solid #1A1A1A;
+            padding-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 8px;
+            color: #1A1A1A;
+        }
+
+        .tagline {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            opacity: 0.5;
+            font-weight: 400;
+        }
+
+        /* Section Styling - Much More Visible */
+        .section {
+            background: #F5F2ED;
+            border: 2px solid #1A1A1A;
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1A1A1A;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #1A1A1A;
+            color: #E8E3DA;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .learn-more-btn {
+            background: transparent;
+            border: 1.5px solid #1A1A1A;
+            padding: 8px 16px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .learn-more-btn:hover {
+            background: #1A1A1A;
+            color: #E8E3DA;
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 14px 0;
+            border: none;
+            border-bottom: 2px solid rgba(26, 26, 26, 0.2);
+            background: transparent;
+            font-size: 15px;
+            font-weight: 400;
+            transition: border-color 0.3s;
+            color: #1A1A1A;
+            font-family: inherit;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-bottom-color: #1A1A1A;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%231A1A1A' stroke-width='2'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+            padding-right: 24px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 3px;
+            border: none;
+            background: rgba(26, 26, 26, 0.15);
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #1A1A1A;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #1A1A1A;
+            cursor: pointer;
+            border-radius: 0;
+            border: none;
+        }
+
+        .range-value {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.5;
+        }
+
+        /* Checkbox Groups */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(26, 26, 26, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(26, 26, 26, 0.3);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid #1A1A1A;
+            background: transparent;
+            position: relative;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            background: #1A1A1A;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 5px;
+            height: 9px;
+            border: solid #E8E3DA;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            text-transform: none;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            opacity: 1;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Chord Progression Grid */
+        .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .chord-btn {
+            padding: 18px;
+            border: 2px solid rgba(26, 26, 26, 0.2);
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 15px;
+            text-align: center;
+            color: #1A1A1A;
+        }
+
+        .chord-btn.active {
+            background: #1A1A1A;
+            color: #E8E3DA;
+            border-color: #1A1A1A;
+        }
+
+        .chord-btn:hover {
+            border-color: #1A1A1A;
+            background: rgba(26, 26, 26, 0.05);
+        }
+
+        .chord-btn.active:hover {
+            background: #1A1A1A;
+        }
+
+        /* Preset Pills */
+        .preset-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .preset-pill {
+            padding: 8px 16px;
+            background: #fff;
+            border: 1.5px solid rgba(26, 26, 26, 0.2);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .preset-pill:hover {
+            border-color: #1A1A1A;
+            background: rgba(26, 26, 26, 0.05);
+        }
+
+        .preset-pill.active {
+            background: #1A1A1A;
+            color: #E8E3DA;
+            border-color: #1A1A1A;
+        }
+
+        .genre-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(26, 26, 26, 0.1);
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 6px;
+            opacity: 0.6;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 24px;
+            background: #1A1A1A;
+            color: #E8E3DA;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 40px;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 18px;
+            background: transparent;
+            color: #1A1A1A;
+            border: 2px solid #1A1A1A;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            background: #1A1A1A;
+            color: #E8E3DA;
+        }
+
+        /* Modal System */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #E8E3DA;
+            max-width: 900px;
+            width: 100%;
+            padding: 48px;
+            position: relative;
+            margin: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: 2px solid #1A1A1A;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #1A1A1A;
+            color: #E8E3DA;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #1A1A1A;
+            padding-bottom: 16px;
+        }
+
+        .modal-section {
+            margin-bottom: 32px;
+        }
+
+        .modal-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+
+        .modal-section p {
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .example-box {
+            background: #F5F2ED;
+            border-left: 4px solid #1A1A1A;
+            padding: 20px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .audio-preview {
+            background: #1A1A1A;
+            color: #E8E3DA;
+            padding: 16px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            margin: 12px 0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .audio-preview:hover {
+            background: #000;
+        }
+
+        .audio-preview::before {
+            content: '▶';
+            font-size: 14px;
+        }
+
+        /* Analysis Panel */
+        .analysis-panel {
+            background: #1A1A1A;
+            color: #E8E3DA;
+            padding: 32px;
+            margin-top: 32px;
+            display: none;
+        }
+
+        .analysis-panel.active {
+            display: block;
+        }
+
+        .analysis-panel h3 {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: #E8E3DA;
+        }
+
+        .analysis-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(232, 227, 218, 0.2);
+        }
+
+        .analysis-item:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+
+        .analysis-value {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .suggestion-box {
+            background: rgba(232, 227, 218, 0.1);
+            padding: 16px;
+            margin-top: 12px;
+            border-left: 3px solid #E8E3DA;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid rgba(26, 26, 26, 0.2);
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(26, 26, 26, 0.3) transparent;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .tabs::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tabs::-webkit-scrollbar-thumb {
+            background: rgba(26, 26, 26, 0.3);
+            border-radius: 3px;
+        }
+
+        .tabs::-webkit-scrollbar-thumb:hover {
+            background: rgba(26, 26, 26, 0.5);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1A1A1A;
+            opacity: 0.5;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab.active {
+            border-bottom-color: #1A1A1A;
+            opacity: 1;
+        }
+
+        .tab:hover {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+
+            .section {
+                padding: 24px;
+            }
+
+            .modal-content {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MIDI GENERATOR</h1>
+            <p class="tagline">Theory is the map — Your feeling is the territory</p>
+        </header>
+
+        <form id="mainForm">
+            <!-- BASICS -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">1</span>
+                        BASICS
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('basics')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tempo">TEMPO (BPM)</label>
+                        <input type="number" id="tempo" min="40" max="240" value="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="key">KEY</label>
+                        <select id="key">
+                            <option value="C">C MAJOR</option>
+                            <option value="Cm">C MINOR</option>
+                            <option value="C#">C# / Db MAJOR</option>
+                            <option value="C#m">C# / Db MINOR</option>
+                            <option value="D">D MAJOR</option>
+                            <option value="Dm">D MINOR</option>
+                            <option value="D#">D# / Eb MAJOR</option>
+                            <option value="D#m">D# / Eb MINOR</option>
+                            <option value="E">E MAJOR</option>
+                            <option value="Em">E MINOR</option>
+                            <option value="F">F MAJOR</option>
+                            <option value="Fm">F MINOR</option>
+                            <option value="F#">F# / Gb MAJOR</option>
+                            <option value="F#m">F# / Gb MINOR</option>
+                            <option value="G">G MAJOR</option>
+                            <option value="Gm">G MINOR</option>
+                            <option value="G#">G# / Ab MAJOR</option>
+                            <option value="G#m">G# / Ab MINOR</option>
+                            <option value="A">A MAJOR</option>
+                            <option value="Am">A MINOR</option>
+                            <option value="A#">A# / Bb MAJOR</option>
+                            <option value="A#m">A# / Bb MINOR</option>
+                            <option value="B">B MAJOR</option>
+                            <option value="Bm">B MINOR</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scale">SCALE / MODE</label>
+                        <select id="scale">
+                            <option value="major">MAJOR</option>
+                            <option value="minor">NATURAL MINOR</option>
+                            <option value="harmonic_minor">HARMONIC MINOR</option>
+                            <option value="melodic_minor">MELODIC MINOR</option>
+                            <option value="dorian">DORIAN</option>
+                            <option value="phrygian">PHRYGIAN</option>
+                            <option value="lydian">LYDIAN</option>
+                            <option value="mixolydian">MIXOLYDIAN</option>
+                            <option value="pentatonic_major">PENTATONIC MAJOR</option>
+                            <option value="pentatonic_minor">PENTATONIC MINOR</option>
+                            <option value="blues">BLUES</option>
+                            <option value="whole_tone">WHOLE TONE</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeSignature">TIME SIGNATURE</label>
+                        <select id="timeSignature">
+                            <option value="4/4">4/4 (COMMON)</option>
+                            <option value="3/4">3/4 (WALTZ)</option>
+                            <option value="6/8">6/8 (SHUFFLE)</option>
+                            <option value="5/4">5/4 (PROG)</option>
+                            <option value="7/8">7/8 (PROG)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHORD PROGRESSIONS -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">2</span>
+                        CHORD PROGRESSIONS
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('chords')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="tabs">
+                    <button type="button" class="tab active" data-tab="popular">POPULAR</button>
+                    <button type="button" class="tab" data-tab="jazz">JAZZ</button>
+                    <button type="button" class="tab" data-tab="edm">EDM/ELECTRONIC</button>
+                    <button type="button" class="tab" data-tab="rock">ROCK</button>
+                    <button type="button" class="tab" data-tab="hiphop">HIP-HOP/TRAP</button>
+                    <button type="button" class="tab" data-tab="latin">LATIN</button>
+                    <button type="button" class="tab" data-tab="classical">CLASSICAL</button>
+                    <button type="button" class="tab" data-tab="rnb">R&B/SOUL</button>
+                    <button type="button" class="tab" data-tab="country">COUNTRY</button>
+                    <button type="button" class="tab" data-tab="gospel">GOSPEL</button>
+                    <button type="button" class="tab" data-tab="experimental">EXPERIMENTAL</button>
+                    <button type="button" class="tab" data-tab="custom">CUSTOM</button>
+                </div>
+
+                <div class="tab-content active" data-tabcontent="popular">
+                    <div class="preset-pills" id="popularPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="jazz">
+                    <div class="preset-pills" id="jazzPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="edm">
+                    <div class="preset-pills" id="edmPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="rock">
+                    <div class="preset-pills" id="rockPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="hiphop">
+                    <div class="preset-pills" id="hiphopPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="latin">
+                    <div class="preset-pills" id="latinPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="classical">
+                    <div class="preset-pills" id="classicalPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="rnb">
+                    <div class="preset-pills" id="rnbPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="country">
+                    <div class="preset-pills" id="countryPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="gospel">
+                    <div class="preset-pills" id="gospelPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="experimental">
+                    <div class="preset-pills" id="experimentalPresets"></div>
+                </div>
+
+                <div class="tab-content" data-tabcontent="custom">
+                    <label>BUILD YOUR OWN</label>
+                    <div class="chord-grid" id="chordSelector">
+                        <div class="chord-btn" data-chord="I">I</div>
+                        <div class="chord-btn" data-chord="ii">ii</div>
+                        <div class="chord-btn" data-chord="iii">iii</div>
+                        <div class="chord-btn" data-chord="IV">IV</div>
+                        <div class="chord-btn" data-chord="V">V</div>
+                        <div class="chord-btn" data-chord="vi">vi</div>
+                        <div class="chord-btn" data-chord="vii°">vii°</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STRUCTURE -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">3</span>
+                        SONG STRUCTURE
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('structure')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeIntro" checked>
+                        <label for="includeIntro">INTRO (4 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeVerse" checked>
+                        <label for="includeVerse">VERSE (8 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeChorus" checked>
+                        <label for="includeChorus">CHORUS (8 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeBridge" checked>
+                        <label for="includeBridge">BRIDGE (8 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeOutro" checked>
+                        <label for="includeOutro">OUTRO (4 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeBreakdown">
+                        <label for="includeBreakdown">BREAKDOWN (8 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeDrop">
+                        <label for="includeDrop">DROP (8 BARS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeBuildup">
+                        <label for="includeBuildup">BUILD-UP (4 BARS)</label>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 24px;">
+                    <div class="form-group">
+                        <label for="numVerses">NUMBER OF VERSES</label>
+                        <input type="number" id="numVerses" min="1" max="4" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="numChorus">NUMBER OF CHORUSES</label>
+                        <input type="number" id="numChorus" min="1" max="4" value="3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- INSTRUMENTATION -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">4</span>
+                        INSTRUMENTATION
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('instruments')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackDrums" checked>
+                        <label for="trackDrums">DRUMS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackBass" checked>
+                        <label for="trackBass">BASS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackChords" checked>
+                        <label for="trackChords">CHORDS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackLead" checked>
+                        <label for="trackLead">LEAD</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackArp">
+                        <label for="trackArp">ARPEGGIO</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackPad">
+                        <label for="trackPad">PAD</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackPluck">
+                        <label for="trackPluck">PLUCK</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="trackPerc">
+                        <label for="trackPerc">PERCUSSION</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADVANCED -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">5</span>
+                        PRODUCTION PARAMETERS
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('production')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="humanization">HUMANIZATION</label>
+                        <input type="range" id="humanization" min="0" max="100" value="50">
+                        <span class="range-value" id="humanizationValue">50</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="swing">SWING</label>
+                        <input type="range" id="swing" min="0" max="100" value="0">
+                        <span class="range-value" id="swingValue">0</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="density">NOTE DENSITY</label>
+                        <input type="range" id="density" min="0" max="100" value="50">
+                        <span class="range-value" id="densityValue">MEDIUM</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="drumComplexity">DRUM COMPLEXITY</label>
+                        <select id="drumComplexity">
+                            <option value="simple">SIMPLE</option>
+                            <option value="medium">MEDIUM</option>
+                            <option value="complex">COMPLEX</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bassPattern">BASS PATTERN</label>
+                        <select id="bassPattern">
+                            <option value="root">ROOT NOTES</option>
+                            <option value="walking">WALKING BASS</option>
+                            <option value="rhythmic">RHYTHMIC</option>
+                            <option value="melodic">MELODIC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="voicing">CHORD VOICING</label>
+                        <select id="voicing">
+                            <option value="triad">TRIADS</option>
+                            <option value="seventh">7TH CHORDS</option>
+                            <option value="extended">EXTENDED</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FX & TRANSITIONS -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">6</span>
+                        FX & TRANSITIONS
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('fx')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addRisers">
+                        <label for="addRisers">RISERS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addImpacts">
+                        <label for="addImpacts">IMPACTS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addFills" checked>
+                        <label for="addFills">DRUM FILLS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addDownlifters">
+                        <label for="addDownlifters">DOWNLIFTERS</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPERIMENTAL -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">7</span>
+                        EXPERIMENTAL
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('experimental')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="polyrhythms">
+                        <label for="polyrhythms">POLYRHYTHMS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="microtonality">
+                        <label for="microtonality">MICROTONALITY</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="generative">
+                        <label for="generative">GENERATIVE MUTATIONS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="glitch">
+                        <label for="glitch">GLITCH EFFECTS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="retrograde">
+                        <label for="retrograde">RETROGRADE SECTIONS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="euclidean">
+                        <label for="euclidean">EUCLIDEAN RHYTHMS</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMICS -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-number">8</span>
+                        DYNAMICS & ARRANGEMENT
+                    </div>
+                    <button type="button" class="learn-more-btn" onclick="openModal('dynamics')">
+                        Learn More
+                    </button>
+                </div>
+
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="dynamicArrangement" checked>
+                        <label for="dynamicArrangement">DYNAMIC ARRANGEMENT</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="addVariations" checked>
+                        <label for="addVariations">VARIATIONS ON REPEAT</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="velocityAutomation">
+                        <label for="velocityAutomation">VELOCITY AUTOMATION</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="filterSweeps">
+                        <label for="filterSweeps">FILTER SWEEPS</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn-primary">GENERATE MIDI</button>
+            <button type="button" class="btn-secondary" id="previewLayersBtn">🔊 PREVIEW SONG LAYERS</button>
+            <button type="button" class="btn-secondary" id="analyzeBtn">ANALYZE MY CHOICES</button>
+
+            <!-- Debug Status Display -->
+            <div id="debugStatus" style="background: #000; color: #0f0; padding: 10px; margin-top: 20px; font-family: monospace; font-size: 12px; display: none; max-height: 200px; overflow-y: auto;"></div>
+        </form>
+
+        <!-- Analysis Panel -->
+        <div class="analysis-panel" id="analysisPanel"></div>
+
+        <!-- Visualizations -->
+        <div class="section" style="margin-top: 32px;">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-number">📊</span>
+                    VISUALIZATIONS
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                <div>
+                    <h4 style="margin-bottom: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6;">Piano Roll</h4>
+                    <canvas id="pianoRoll" width="800" height="400" style="width: 100%; border: 2px solid #1A1A1A; background: #F5F2ED;"></canvas>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6;">Circle of Fifths</h4>
+                    <canvas id="circleOfFifths" width="300" height="300" style="width: 100%; border: 2px solid #1A1A1A; background: #F5F2ED;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Educational Modals -->
+    <div id="modalContainer"></div>
+
+    <script>
+        // Comprehensive Chord Progression Database
+        const chordProgressions = {
+            popular: [
+                { name: 'I-V-vi-IV', chords: ['I','V','vi','IV'], genre: 'POP', desc: 'The "Axis of Awesome" - Used in thousands of hit songs' },
+                { name: 'vi-IV-I-V', chords: ['vi','IV','I','V'], genre: 'POP', desc: 'Emotional pop ballad progression' },
+                { name: 'I-vi-IV-V', chords: ['I','vi','IV','V'], genre: '50s', desc: 'Classic doo-wop/50s progression' },
+                { name: 'I-IV-V', chords: ['I','IV','V'], genre: 'BASIC', desc: 'The simplest three-chord wonder' },
+                { name: 'I-V-vi-iii-IV', chords: ['I','V','vi','iii','IV'], genre: 'POP', desc: 'Extended pop progression' },
+                { name: 'I-III-IV-iv', chords: ['I','III','IV','iv'], genre: 'BEATLES', desc: 'Beatles-style chromatic descent' },
+                { name: 'vi-V-IV-V', chords: ['vi','V','IV','V'], genre: 'BALLAD', desc: 'Melancholic ballad' },
+            ],
+            jazz: [
+                { name: 'ii-V-I', chords: ['ii','V','I'], genre: 'JAZZ', desc: 'The ultimate jazz turnaround' },
+                { name: 'I-vi-ii-V', chords: ['I','vi','ii','V'], genre: 'JAZZ', desc: 'Rhythm changes progression' },
+                { name: 'iii-vi-ii-V', chords: ['iii','vi','ii','V'], genre: 'JAZZ', desc: 'Extended jazz turnaround' },
+                { name: 'I-IV-vii°-iii', chords: ['I','IV','vii°','iii'], genre: 'JAZZ', desc: 'Descending chromatic jazz' },
+                { name: 'ii-V-iii-vi', chords: ['ii','V','iii','vi'], genre: 'BEBOP', desc: 'Bebop progression' },
+                { name: 'I-iii-ii-V', chords: ['I','iii','ii','V'], genre: 'SWING', desc: 'Swing era progression' },
+                { name: 'vi-ii-V-I', chords: ['vi','ii','V','I'], genre: 'JAZZ', desc: 'Extended ii-V-I' },
+            ],
+            edm: [
+                { name: 'i-VI-III-VII', chords: ['i','VI','III','VII'], genre: 'EDM', desc: 'Epic minor EDM build - Natural minor' },
+                { name: 'i-v-VI-IV', chords: ['i','v','VI','IV'], genre: 'TRAP', desc: 'Dark trap/future bass progression' },
+                { name: 'vi-IV-V-I', chords: ['vi','IV','V','I'], genre: 'HOUSE', desc: 'Progressive house anthem' },
+                { name: 'I-V-IV-IV', chords: ['I','V','IV','IV'], genre: 'TRANCE', desc: 'Euphoric trance uplift' },
+                { name: 'i-III-VII-VI', chords: ['i','III','VII','VI'], genre: 'DUBSTEP', desc: 'Heavy dubstep wobble' },
+                { name: 'vi-V-IV-III', chords: ['vi','V','IV','III'], genre: 'TECHNO', desc: 'Driving techno descent' },
+                { name: 'i-VII-VI-V', chords: ['i','VII','VI','V'], genre: 'PROGRESSIVE', desc: 'Progressive EDM epic' },
+                { name: 'I-IV-vi-V', chords: ['I','IV','vi','V'], genre: 'FUTURE BASS', desc: 'Future bass emotional' },
+            ],
+            rock: [
+                { name: 'I-IV-V', chords: ['I','IV','V'], genre: 'ROCK', desc: 'Classic rock progression' },
+                { name: 'i-VI-VII', chords: ['i','VI','VII'], genre: 'ALT ROCK', desc: 'Alternative rock progression' },
+                { name: 'i-VII-VI-VII', chords: ['i','VII','VI','VII'], genre: 'HARD ROCK', desc: 'Hard rock power chords' },
+                { name: 'I-I-IV-V', chords: ['I','I','IV','V'], genre: 'BLUES ROCK', desc: '12-bar blues foundation' },
+                { name: 'i-iv-v', chords: ['i','iv','v'], genre: 'PUNK', desc: 'Punk rock three chords' },
+                { name: 'I-V-IV', chords: ['I','V','IV'], genre: 'POP ROCK', desc: 'Simple pop-rock' },
+                { name: 'vi-IV-I-V', chords: ['vi','IV','I','V'], genre: 'POP PUNK', desc: 'Pop punk anthem' },
+            ],
+            hiphop: [
+                { name: 'i-v-iv-VII', chords: ['i','v','iv','VII'], genre: 'TRAP', desc: 'Modern trap progression' },
+                { name: 'i-VII-VI-v', chords: ['i','VII','VI','v'], genre: 'HIP-HOP', desc: 'Classic hip-hop minor' },
+                { name: 'i-IV-VII-III', chords: ['i','IV','VII','III'], genre: 'TRAP', desc: 'Dark melodic trap' },
+                { name: 'vi-ii-IV-V', chords: ['vi','ii','IV','V'], genre: 'BOOM BAP', desc: 'Boom bap jazz-hop' },
+                { name: 'i-iv-v-iv', chords: ['i','iv','v','iv'], genre: 'OLD SCHOOL', desc: 'Old school hip-hop' },
+                { name: 'i-VI-iv-VII', chords: ['i','VI','iv','VII'], genre: 'DRILL', desc: 'UK/Chicago drill' },
+            ],
+            latin: [
+                { name: 'i-VII-VI-V', chords: ['i','VII','VI','V'], genre: 'FLAMENCO', desc: 'Flamenco/Spanish Phrygian' },
+                { name: 'i-IV-VII-III', chords: ['i','IV','VII','III'], genre: 'REGGAETON', desc: 'Reggaeton/dembow' },
+                { name: 'I-V-vi-IV', chords: ['I','V','vi','IV'], genre: 'LATIN POP', desc: 'Latin pop progression' },
+                { name: 'i-VI-III-VII', chords: ['i','VI','III','VII'], genre: 'BACHATA', desc: 'Bachata romantic' },
+                { name: 'I-IV-I-V', chords: ['I','IV','I','V'], genre: 'SALSA', desc: 'Salsa montuno' },
+                { name: 'ii-V-I-vi', chords: ['ii','V','I','vi'], genre: 'BOSSA NOVA', desc: 'Bossa nova jazz' },
+            ],
+            classical: [
+                { name: 'I-IV-V-I', chords: ['I','IV','V','I'], genre: 'CLASSICAL', desc: 'Perfect authentic cadence' },
+                { name: 'I-V-vi-iii-IV-I-IV-V', chords: ['I','V','vi','iii','IV','I','IV','V'], genre: 'BAROQUE', desc: 'Baroque sequence' },
+                { name: 'I-vi-IV-V', chords: ['I','vi','IV','V'], genre: 'ROMANTIC', desc: 'Romantic era progression' },
+                { name: 'i-V-i-VII', chords: ['i','V','i','VII'], genre: 'MINOR', desc: 'Classical minor progression' },
+                { name: 'I-IV-vii°-iii-vi-ii-V-I', chords: ['I','IV','vii°','iii','vi','ii','V','I'], genre: 'CIRCLE', desc: 'Circle of fifths' },
+            ],
+            rnb: [
+                { name: 'I-iii-IV-V', chords: ['I','iii','IV','V'], genre: 'R&B', desc: 'Classic R&B progression' },
+                { name: 'vi-IV-I-V', chords: ['vi','IV','I','V'], genre: 'NEO-SOUL', desc: 'Neo-soul ballad' },
+                { name: 'ii-V-I-vi', chords: ['ii','V','I','vi'], genre: 'JAZZ R&B', desc: 'Jazz-influenced R&B' },
+                { name: 'I-V-vi-iii', chords: ['I','V','vi','iii'], genre: 'SOUL', desc: 'Soul progression' },
+                { name: 'vi-V-IV-iii', chords: ['vi','V','IV','iii'], genre: 'CONTEMPORARY', desc: 'Contemporary R&B' },
+                { name: 'I-iii-vi-IV', chords: ['I','iii','vi','IV'], genre: 'GOSPEL R&B', desc: 'Gospel-influenced R&B' },
+            ],
+            country: [
+                { name: 'I-IV-V-V', chords: ['I','IV','V','V'], genre: 'COUNTRY', desc: 'Classic country progression' },
+                { name: 'I-V-vi-IV', chords: ['I','V','vi','IV'], genre: 'POP COUNTRY', desc: 'Modern pop country' },
+                { name: 'I-IV-I-V', chords: ['I','IV','I','V'], genre: 'BLUEGRASS', desc: 'Bluegrass progression' },
+                { name: 'I-vi-ii-V', chords: ['I','vi','ii','V'], genre: 'HONKY-TONK', desc: 'Honky-tonk country' },
+                { name: 'I-V-IV', chords: ['I','V','IV'], genre: 'OUTLAW', desc: 'Outlaw country simple' },
+            ],
+            gospel: [
+                { name: 'I-IV-I-V', chords: ['I','IV','I','V'], genre: 'TRADITIONAL', desc: 'Traditional gospel' },
+                { name: 'I-iii-IV-V', chords: ['I','iii','IV','V'], genre: 'GOSPEL', desc: 'Gospel hymn progression' },
+                { name: 'I-V-vi-IV', chords: ['I','V','vi','IV'], genre: 'CONTEMPORARY', desc: 'Contemporary worship' },
+                { name: 'ii-V-I-IV', chords: ['ii','V','I','IV'], genre: 'JAZZ GOSPEL', desc: 'Jazz gospel progression' },
+                { name: 'I-IV-V-IV', chords: ['I','IV','V','IV'], genre: 'PRAISE', desc: 'Praise & worship' },
+            ],
+            experimental: [
+                { name: 'I-II-III-IV', chords: ['I','II','III','IV'], genre: 'CHROMATIC', desc: 'Chromatic ascent - no functional harmony' },
+                { name: 'I-II-I-II', chords: ['I','II','I'], genre: 'MODAL', desc: 'Half-step modal interchange' },
+                { name: 'I-V-VI-VII', chords: ['I','V','vi','V'], genre: 'LYDIAN', desc: 'Lydian modal progression' },
+                { name: 'i-II-III-iv', chords: ['i','ii','iii','iv'], genre: 'PHRYGIAN', desc: 'Phrygian dark progression' },
+                { name: 'I-III-V-VII', chords: ['I','III','V','VII'], genre: 'AUGMENTED', desc: 'Augmented/whole-tone' },
+                { name: 'vii°-vi-V-IV', chords: ['vii°','vi','V','IV'], genre: 'DESCENDING', desc: 'Chromatic descent' },
+            ]
+        };
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChordPresets();
+            initializeTabs();
+            initializeRangeSliders();
+            initializeFormHandlers();
+        });
+
+        function initializeChordPresets() {
+            Object.keys(chordProgressions).forEach(category => {
+                const container = document.getElementById(`${category}Presets`);
+                if (!container) return;
+
+                chordProgressions[category].forEach(prog => {
+                    const pill = document.createElement('div');
+                    pill.className = 'preset-pill';
+                    pill.innerHTML = `${prog.name} <span class="genre-tag">${prog.genre}</span>`;
+                    pill.dataset.chords = prog.chords.join('-');
+                    pill.title = prog.desc;
+                    pill.onclick = (e) => selectChordPreset(prog.chords, pill, e);
+                    container.appendChild(pill);
+                });
+            });
+
+            // Default selection
+            selectChordPreset(['I','V','vi','IV']);
+        }
+
+        function selectChordPreset(chords, pillElement, event) {
+            // Prevent any form submission
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            console.log('🎵 Selecting chord preset:', chords);
+
+            // Update chord selector
+            document.querySelectorAll('.chord-btn').forEach(btn => btn.classList.remove('active'));
+            chords.forEach(chord => {
+                const btn = document.querySelector(`[data-chord="${chord}"]`);
+                if (btn) {
+                    btn.classList.add('active');
+                    console.log('  ✓ Added active class to:', chord);
+                }
+            });
+
+            // Update active pill
+            document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+            if (pillElement) {
+                pillElement.classList.add('active');
+                console.log('  ✓ Activated pill:', pillElement.textContent);
+            }
+        }
+
+        function initializeTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const tabName = this.dataset.tab;
+                    console.log('📑 Tab clicked:', tabName);
+
+                    // Update active tab
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show tab content
+                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    const targetContent = document.querySelector(`[data-tabcontent="${tabName}"]`);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+
+            // Custom chord selector
+            document.querySelectorAll('.chord-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🎹 Chord button clicked:', this.dataset.chord);
+                    this.classList.toggle('active');
+                    document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+                });
+            });
+        }
+
+        function initializeRangeSliders() {
+            document.getElementById('humanization').addEventListener('input', e => {
+                document.getElementById('humanizationValue').textContent = e.target.value;
+            });
+            document.getElementById('swing').addEventListener('input', e => {
+                document.getElementById('swingValue').textContent = e.target.value;
+            });
+            document.getElementById('density').addEventListener('input', e => {
+                const val = parseInt(e.target.value);
+                document.getElementById('densityValue').textContent =
+                    val < 33 ? 'SPARSE' : val < 66 ? 'MEDIUM' : 'DENSE';
+            });
+        }
+
+        function initializeFormHandlers() {
+            const form = document.getElementById('mainForm');
+            console.log('📋 Form element found:', form);
+
+            // Prevent form submission from any source
+            form.addEventListener('submit', function(e) {
+                console.log('📝 Form submit event fired');
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🚫 Default prevented, calling generateMIDI()');
+                generateMIDI();
+                return false;
+            });
+
+            // Also prevent any clicks inside the form from submitting it
+            form.addEventListener('click', function(e) {
+                // Only allow the actual submit button to submit
+                if (e.target.type === 'submit' || e.target.classList.contains('btn-primary')) {
+                    console.log('✅ Submit button clicked - will submit form');
+                    return true;
+                }
+
+                // Prevent everything else from submitting
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'DIV' || e.target.classList.contains('preset-pill')) {
+                    console.log('🛑 Preventing click propagation from:', e.target.className || e.target.tagName);
+                    // Don't prevent default, just stop propagation to form
+                    e.stopPropagation();
+                }
+            });
+
+            document.getElementById('previewLayersBtn').addEventListener('click', function() {
+                previewSongLayers();
+            });
+
+            document.getElementById('analyzeBtn').addEventListener('click', function() {
+                analyzeChoices();
+            });
+
+            // Initialize visualizations
+            initializeVisualizations();
+        }
+
+        function initializeVisualizations() {
+            // Initialize piano roll
+            if (typeof PianoRollVisualizer !== 'undefined') {
+                window.pianoRoll = new PianoRollVisualizer('pianoRoll');
+                pianoRoll.draw();
+            }
+
+            // Initialize circle of fifths
+            if (typeof CircleOfFifthsVisualizer !== 'undefined') {
+                window.circleOfFifths = new CircleOfFifthsVisualizer('circleOfFifths');
+                circleOfFifths.draw();
+            }
+
+            // Update circle when key changes
+            document.getElementById('key').addEventListener('change', function(e) {
+                const key = e.target.value.replace('m', '');
+                if (window.circleOfFifths) {
+                    circleOfFifths.setKey(key);
+                }
+            });
+        }
+
+        async function previewSongLayers() {
+            // Stop any currently playing audio
+            if (audioEngine) {
+                audioEngine.stopAll();
+            }
+
+            const params = {
+                tempo: parseInt(document.getElementById('tempo').value),
+                key: document.getElementById('key').value.replace('m', ''),
+                layers: []
+            };
+
+            if (document.getElementById('trackDrums').checked) params.layers.push('drums');
+            if (document.getElementById('trackBass').checked) params.layers.push('bass');
+            if (document.getElementById('trackChords').checked) params.layers.push('chords');
+            if (document.getElementById('trackLead').checked) params.layers.push('lead');
+
+            // Create a visual countdown
+            const btn = document.getElementById('previewLayersBtn');
+            const originalText = btn.textContent;
+
+            btn.textContent = '🎵 Playing layers...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 16000);
+
+            // Play the layered preview
+            if (audioEngine) {
+                await audioEngine.demonstrateLayering(params);
+            }
+        }
+
+        function openModal(type) {
+            openEducationalModal(type);
+        }
+
+        function getSelectedChords() {
+            const selected = [];
+            const activeChords = document.querySelectorAll('.chord-btn.active');
+            console.log('🎼 Getting selected chords, found', activeChords.length, 'active chord buttons');
+
+            activeChords.forEach(btn => {
+                const chord = btn.dataset.chord;
+                selected.push(chord);
+                console.log('  ✓ Selected chord:', chord);
+            });
+
+            const result = selected.length > 0 ? selected : ['I', 'V', 'vi', 'IV'];
+            console.log('🎵 Final chord progression:', result);
+            return result;
+        }
+
+        // Debug logger that shows on screen
+        function debugLog(msg, type = 'info') {
+            const debugDiv = document.getElementById('debugStatus');
+            debugDiv.style.display = 'block';
+            const colors = { info: '#00aaff', success: '#00ff00', error: '#ff0000', warn: '#ffaa00' };
+            const color = colors[type] || '#fff';
+            debugDiv.innerHTML += `<span style="color: ${color}">${msg}</span>\n`;
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+            console.log(msg);
+        }
+
+        function clearDebugLog() {
+            const debugDiv = document.getElementById('debugStatus');
+            debugDiv.innerHTML = '';
+            debugDiv.style.display = 'none';
+        }
+
+        function generateMIDI() {
+            try {
+                clearDebugLog();
+                debugLog('🎵 Generate MIDI clicked', 'info');
+
+                // Collect ALL parameters
+                const params = {
+                tempo: parseInt(document.getElementById('tempo').value) || 120,
+                key: document.getElementById('key').value || 'C',
+                scale: document.getElementById('scale').value || 'major',
+                timeSignature: document.getElementById('timeSignature').value || '4/4',
+                chordProgression: getSelectedChords(),
+
+                // Structure
+                includeIntro: document.getElementById('includeIntro') ? document.getElementById('includeIntro').checked : true,
+                includeVerse: document.getElementById('includeVerse') ? document.getElementById('includeVerse').checked : true,
+                includeChorus: document.getElementById('includeChorus') ? document.getElementById('includeChorus').checked : true,
+                includeBridge: document.getElementById('includeBridge') ? document.getElementById('includeBridge').checked : false,
+                includeOutro: document.getElementById('includeOutro') ? document.getElementById('includeOutro').checked : true,
+                includeBreakdown: document.getElementById('includeBreakdown') ? document.getElementById('includeBreakdown').checked : false,
+                includeDrop: document.getElementById('includeDrop') ? document.getElementById('includeDrop').checked : false,
+                includeBuildup: document.getElementById('includeBuildup') ? document.getElementById('includeBuildup').checked : false,
+                numVerses: parseInt(document.getElementById('numVerses').value) || 2,
+                numChorus: parseInt(document.getElementById('numChorus').value) || 3,
+
+                // Tracks
+                tracks: {
+                    drums: document.getElementById('trackDrums') ? document.getElementById('trackDrums').checked : true,
+                    bass: document.getElementById('trackBass') ? document.getElementById('trackBass').checked : true,
+                    chords: document.getElementById('trackChords') ? document.getElementById('trackChords').checked : true,
+                    lead: document.getElementById('trackLead') ? document.getElementById('trackLead').checked : true,
+                    arp: document.getElementById('trackArp') ? document.getElementById('trackArp').checked : false,
+                    pad: document.getElementById('trackPad') ? document.getElementById('trackPad').checked : false,
+                    pluck: document.getElementById('trackPluck') ? document.getElementById('trackPluck').checked : false,
+                    perc: document.getElementById('trackPerc') ? document.getElementById('trackPerc').checked : false
+                },
+
+                // Production
+                humanization: parseInt(document.getElementById('humanization').value) || 50,
+                swing: parseInt(document.getElementById('swing').value) || 0,
+                density: parseInt(document.getElementById('density').value) || 50,
+                drumComplexity: document.getElementById('drumComplexity') ? document.getElementById('drumComplexity').value : 'medium',
+                bassPattern: document.getElementById('bassPattern') ? document.getElementById('bassPattern').value : 'root',
+                voicing: document.getElementById('voicing') ? document.getElementById('voicing').value : 'triad',
+
+                // FX & Dynamics
+                addFills: document.getElementById('addFills') ? document.getElementById('addFills').checked : false,
+                addRisers: document.getElementById('addRisers') ? document.getElementById('addRisers').checked : false,
+                addImpacts: document.getElementById('addImpacts') ? document.getElementById('addImpacts').checked : false,
+                addDownlifters: document.getElementById('addDownlifters') ? document.getElementById('addDownlifters').checked : false,
+                dynamicArrangement: document.getElementById('dynamicArrangement') ? document.getElementById('dynamicArrangement').checked : true,
+                addVariations: document.getElementById('addVariations') ? document.getElementById('addVariations').checked : true,
+                velocityAutomation: document.getElementById('velocityAutomation') ? document.getElementById('velocityAutomation').checked : false,
+                filterSweeps: document.getElementById('filterSweeps') ? document.getElementById('filterSweeps').checked : false,
+
+                // Experimental
+                polyrhythms: document.getElementById('polyrhythms') ? document.getElementById('polyrhythms').checked : false,
+                microtonality: document.getElementById('microtonality') ? document.getElementById('microtonality').checked : false,
+                generative: document.getElementById('generative') ? document.getElementById('generative').checked : false,
+                glitch: document.getElementById('glitch') ? document.getElementById('glitch').checked : false,
+                retrograde: document.getElementById('retrograde') ? document.getElementById('retrograde').checked : false,
+                euclidean: document.getElementById('euclidean') ? document.getElementById('euclidean').checked : false
+            };
+
+            try {
+                debugLog('📦 Creating MIDI Generator...', 'info');
+                debugLog('Tempo: ' + params.tempo + ' BPM, Key: ' + params.key, 'info');
+                debugLog('Progression: ' + params.chordProgression.join('-'), 'info');
+
+                // Calculate complexity and warn user
+                const numTracks = Object.values(params.tracks).filter(t => t).length;
+                const totalSections = (params.numVerses || 0) + (params.numChorus || 0);
+                const complexity = numTracks * totalSections;
+
+                if (complexity > 50) {
+                    debugLog(`⚠️ High complexity (${complexity}) - may take a moment...`, 'warn');
+                }
+
+                if (totalSections > 10) {
+                    debugLog(`⚠️ Large song (${totalSections} sections) - parameters may be capped`, 'warn');
+                }
+
+                // Create MIDI using embedded engine
+                const midiGenerator = new AdvancedMIDIGenerator(params);
+                debugLog('✅ Generator created', 'success');
+
+                debugLog('🎵 Generating MIDI data...', 'info');
+                const midiBytes = midiGenerator.generate();
+                debugLog('✅ Generated ' + (midiBytes ? midiBytes.length : 0) + ' bytes', 'success');
+
+                if (!midiBytes || midiBytes.length === 0) {
+                    throw new Error('MIDI generation returned empty or null bytes');
+                }
+
+                // Download the file
+                debugLog('💾 Creating download...', 'info');
+                const blob = new Blob([new Uint8Array(midiBytes)], { type: 'audio/midi' });
+                debugLog('✅ Blob: ' + blob.size + ' bytes', 'success');
+
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const keyName = params.key.replace('m', 'minor').replace(/[^a-zA-Z0-9]/g, '');
+                a.download = `midi_${keyName}_${params.tempo}bpm.mid`;
+
+                document.body.appendChild(a);
+                debugLog('⬇️ Downloading: ' + a.download, 'info');
+                a.click();
+
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+
+                // Show success feedback
+                if (audioEngine && audioEngine.showFeedback) {
+                    audioEngine.showFeedback('✅ MIDI file downloaded!', 3000);
+                }
+
+                debugLog('✅✅✅ SUCCESS! Check your downloads folder.', 'success');
+
+                // Draw visualizations
+                try {
+                    drawPianoRoll(midiGenerator);
+                    drawCircleOfFifths(params.key, params.chordProgression);
+                } catch (vizError) {
+                    console.warn('⚠️ Visualization error:', vizError.message);
+                }
+
+            } catch (error) {
+                debugLog('❌ GENERATION FAILED', 'error');
+                debugLog('Error: ' + error.message, 'error');
+                debugLog('Stack: ' + error.stack, 'error');
+
+                if (audioEngine && audioEngine.showFeedback) {
+                    audioEngine.showFeedback('❌ Failed: ' + error.message, 5000);
+                }
+                alert('MIDI generation failed:\n\n' + error.message + '\n\nCheck the debug log below the form.');
+            }
+            } catch (outerError) {
+                // Catch ANY error that happens in the entire function
+                console.error('❌ CRITICAL ERROR in generateMIDI:', outerError);
+                const debugDiv = document.getElementById('debugStatus');
+                debugDiv.style.display = 'block';
+                debugDiv.innerHTML = `<span style="color: #ff0000;">❌ CRITICAL ERROR: ${outerError.message}\n\nStack: ${outerError.stack}</span>`;
+                alert('CRITICAL ERROR:\n\n' + outerError.message + '\n\nThe app should still work - try again with different parameters.');
+            }
+        }
+
+        function analyzeChoices() {
+            const panel = document.getElementById('analysisPanel');
+            panel.innerHTML = `
+                <h3>Your Musical DNA</h3>
+                <div class="analysis-item">
+                    <div class="analysis-label">Genre Analysis</div>
+                    <div class="analysis-value">Your choices suggest a <strong>Modern Pop/EDM</strong> style with emotional undertones.</div>
+                    <div class="suggestion-box">
+                        💡 Try adding a breakdown section for more dynamic contrast
+                    </div>
+                </div>
+                <div class="analysis-item">
+                    <div class="analysis-label">Harmonic Complexity</div>
+                    <div class="analysis-value">Medium complexity. Your chord progression creates tension and resolution effectively.</div>
+                </div>
+                <div class="analysis-item">
+                    <div class="analysis-label">Production Style</div>
+                    <div class="analysis-value">Balanced humanization with moderate swing - great for organic electronic music.</div>
+                </div>
+            `;
+            panel.classList.add('active');
+        }
+
+        // Visualization Functions
+        function drawPianoRoll(midiGenerator) {
+            const canvas = document.getElementById('pianoRoll');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Clear canvas
+            ctx.fillStyle = '#F5F2ED';
+            ctx.fillRect(0, 0, width, height);
+
+            // Get all notes from scale and sections
+            const scale = midiGenerator.scale || [];
+            const sections = midiGenerator.sections || [];
+            const totalBars = sections.reduce((sum, s) => sum + (s.bars || 0), 0);
+
+            if (scale.length === 0 || totalBars === 0) {
+                ctx.fillStyle = '#666';
+                ctx.font = '14px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('No notes to display', width / 2, height / 2);
+                return;
+            }
+
+            // Calculate dimensions
+            const noteHeight = Math.max(2, Math.floor(height / 88)); // 88 piano keys
+            const barWidth = width / Math.min(totalBars, 32); // Show max 32 bars
+            const minNote = 21; // A0
+            const maxNote = 108; // C8
+
+            // Draw piano keys on left
+            ctx.fillStyle = '#1A1A1A';
+            ctx.fillRect(0, 0, 40, height);
+
+            // Draw note grid
+            for (let note = minNote; note <= maxNote; note++) {
+                const y = height - ((note - minNote) * noteHeight);
+                const isBlackKey = [1, 3, 6, 8, 10].includes(note % 12);
+
+                // Draw key
+                ctx.fillStyle = isBlackKey ? '#000' : '#fff';
+                ctx.fillRect(2, y - noteHeight, 36, noteHeight - 1);
+
+                // Draw grid line
+                ctx.strokeStyle = isBlackKey ? '#ddd' : '#ccc';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(40, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Draw bar lines
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            for (let bar = 0; bar <= Math.min(totalBars, 32); bar++) {
+                const x = 40 + (bar * barWidth);
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+
+            // Draw notes from scale across sections
+            ctx.fillStyle = 'rgba(100, 50, 200, 0.6)';
+            sections.forEach((section, sIdx) => {
+                if (sIdx >= 32) return; // Only show first 32 bars worth
+
+                const sectionStart = sections.slice(0, sIdx).reduce((sum, s) => sum + s.bars, 0);
+
+                for (let bar = 0; bar < Math.min(section.bars, 8); bar++) {
+                    const barX = 40 + ((sectionStart + bar) * barWidth);
+
+                    // Draw a few notes from the scale per bar
+                    scale.slice(0, 12).forEach((note, idx) => {
+                        if (note < minNote || note > maxNote) return;
+
+                        const y = height - ((note - minNote) * noteHeight);
+                        const x = barX + (idx % 4) * (barWidth / 4);
+                        const w = Math.max(2, barWidth / 6);
+
+                        ctx.fillRect(x, y - noteHeight + 1, w, noteHeight - 2);
+                    });
+                }
+            });
+
+            // Draw legend
+            ctx.fillStyle = '#000';
+            ctx.font = '11px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`${scale.length} scale notes | ${totalBars} bars`, 45, 15);
+        }
+
+        function drawCircleOfFifths(key, progression) {
+            const canvas = document.getElementById('circleOfFifths');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 30;
+
+            // Clear canvas
+            ctx.fillStyle = '#F5F2ED';
+            ctx.fillRect(0, 0, width, height);
+
+            // Circle of fifths notes (clockwise from C)
+            const circleNotes = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+
+            // Parse key (remove 'm' for minor)
+            const rootKey = (key || 'C').replace('m', '');
+            const isMinor = (key || '').includes('m');
+
+            // Draw outer circle
+            ctx.strokeStyle = '#1A1A1A';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw inner circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.6, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw each note position
+            circleNotes.forEach((note, index) => {
+                const angle = (index / 12) * Math.PI * 2 - Math.PI / 2; // Start at top
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                // Highlight if this is the root key
+                const isRoot = note === rootKey;
+
+                // Draw note circle
+                ctx.fillStyle = isRoot ? '#4A90E2' : '#fff';
+                ctx.strokeStyle = '#1A1A1A';
+                ctx.lineWidth = isRoot ? 3 : 1;
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Draw note label
+                ctx.fillStyle = isRoot ? '#fff' : '#000';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(note, x, y);
+            });
+
+            // Draw center text
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(key || 'C', centerX, centerY - 10);
+
+            ctx.font = '12px sans-serif';
+            ctx.fillText(isMinor ? 'minor' : 'major', centerX, centerY + 10);
+
+            // Draw progression indicator
+            if (progression && progression.length > 0) {
+                ctx.font = '11px monospace';
+                ctx.fillText(progression.join(' - '), centerX, centerY + 30);
+            }
+
+            // Draw connection lines for progression
+            if (progression && progression.length > 1) {
+                ctx.strokeStyle = 'rgba(74, 144, 226, 0.3)';
+                ctx.lineWidth = 2;
+
+                for (let i = 0; i < Math.min(progression.length - 1, 4); i++) {
+                    const angle1 = (circleNotes.indexOf(rootKey) / 12) * Math.PI * 2 - Math.PI / 2;
+                    const angle2 = ((circleNotes.indexOf(rootKey) + (i + 1) * 7) / 12) * Math.PI * 2 - Math.PI / 2;
+
+                    const x1 = centerX + Math.cos(angle1) * radius * 0.6;
+                    const y1 = centerY + Math.sin(angle1) * radius * 0.6;
+                    const x2 = centerX + Math.cos(angle2) * radius * 0.6;
+                    const y2 = centerY + Math.sin(angle2) * radius * 0.6;
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+            }
+        }
+    </script>
+
+    <!-- MIDI Generation Engine -->
+    <script src="midi.js"></script>
+
+    <!-- Audio System -->
+    <script src="audio.js"></script>
+
+    <!-- Content -->
+    <script src="content.js"></script>
+
+</body>
+</html>

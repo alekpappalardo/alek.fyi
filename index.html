@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alek, with a K</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f3ed;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Paper texture background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 29px,
+                    rgba(71, 160, 220, 0.3) 29px,
+                    rgba(71, 160, 220, 0.3) 31px
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header - always visible */
+        header {
+            position: relative;
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(48px, 10vw, 96px);
+            color: #FF1744;
+            text-shadow:
+                4px 4px 0px #000,
+                6px 6px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        /* Underline scribble */
+        h1::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            right: -10px;
+            bottom: -15px;
+            height: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 8'%3E%3Cpath d='M0 4 Q50 1, 100 4 T200 4 T300 4 T400 4' stroke='%23FF1744' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        /* Main container for sections */
+        .sections-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* Section word boxes */
+        .section-word {
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.1s;
+        }
+
+        .section-word:active {
+            transform: scale(0.95);
+        }
+
+        .section-word .text {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: bold;
+            padding: 15px 30px;
+            display: inline-block;
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        /* Crayon scribble backgrounds - each section different color */
+        .section-word:nth-child(1) .text { /* Music */
+            color: #2196F3;
+            background: rgba(33, 150, 243, 0.15);
+            border: 6px solid #2196F3;
+            border-radius: 55% 45% 60% 40% / 50% 60% 40% 50%;
+            transform: rotate(-3deg);
+        }
+
+        .section-word:nth-child(2) .text { /* Code */
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.15);
+            border: 6px solid #4CAF50;
+            border-radius: 45% 55% 40% 60% / 60% 40% 60% 40%;
+            transform: rotate(2deg);
+        }
+
+        .section-word:nth-child(3) .text { /* Film */
+            color: #FF9800;
+            background: rgba(255, 152, 0, 0.15);
+            border: 6px solid #FF9800;
+            border-radius: 60% 40% 55% 45% / 40% 55% 45% 60%;
+            transform: rotate(-1deg);
+        }
+
+        .section-word:nth-child(4) .text { /* Photo */
+            color: #9C27B0;
+            background: rgba(156, 39, 176, 0.15);
+            border: 6px solid #9C27B0;
+            border-radius: 40% 60% 45% 55% / 55% 45% 55% 45%;
+            transform: rotate(3deg);
+        }
+
+        .section-word:nth-child(5) .text { /* Writing */
+            color: #F44336;
+            background: rgba(244, 67, 54, 0.15);
+            border: 6px solid #F44336;
+            border-radius: 50% 50% 60% 40% / 45% 60% 40% 55%;
+            transform: rotate(-2deg);
+        }
+
+        /* Doodles around sections */
+        .section-word::before {
+            content: '';
+            position: absolute;
+            font-size: 48px;
+        }
+
+        .section-word:nth-child(1)::before { content: '♪'; top: -30px; right: -25px; color: #2196F3; }
+        .section-word:nth-child(2)::before { content: '</>'; top: -35px; left: -35px; color: #4CAF50; font-size: 32px; }
+        .section-word:nth-child(3)::before { content: '🎬'; top: -30px; left: -30px; }
+        .section-word:nth-child(4)::before { content: '📸'; top: -30px; right: -30px; }
+        .section-word:nth-child(5)::before { content: '✏️'; top: -30px; left: -30px; }
+
+        /* Hover effects */
+        .section-word:hover .text {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 56px;
+            }
+
+            .sections-container {
+                gap: 30px;
+                margin: 40px auto;
+            }
+
+            .section-word .text {
+                font-size: 40px;
+                padding: 12px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Alek, with a K</h1>
+    </header>
+
+    <div class="sections-container">
+        <a href="music/index.html" class="section-word">
+            <div class="text">Music</div>
+        </a>
+
+        <a href="code/index.html" class="section-word">
+            <div class="text">Code</div>
+        </a>
+
+        <a href="film/index.html" class="section-word">
+            <div class="text">Film</div>
+        </a>
+
+        <a href="photo/index.html" class="section-word">
+            <div class="text">Photo</div>
+        </a>
+
+        <a href="writing/index.html" class="section-word">
+            <div class="text">Writing</div>
+        </a>
+    </div>
+</body>
+</html>

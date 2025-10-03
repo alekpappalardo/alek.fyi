@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Songwriting - Engelsholm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #8e44ad 0%, #e91e63 50%, #9c27b0 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .castle-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+
+        .castle {
+            width: 100%;
+            height: 100%;
+            background: #34495e;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+        }
+
+        .castle::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            width: 15px;
+            height: 15px;
+            background: #34495e;
+            border-radius: 3px;
+        }
+
+        .castle::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            width: 15px;
+            height: 15px;
+            background: #34495e;
+            border-radius: 3px;
+        }
+
+        .songwriters {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #ecf0f1;
+            animation: writing 2s ease-in-out infinite;
+        }
+
+        @keyframes writing {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .singers {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #ecf0f1;
+            animation: singing 1.5s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes singing {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .progress-bar-container {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .voting-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .question {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question h3 {
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .question-prompt {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+        }
+
+        .options {
+            display: grid;
+            gap: 8px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-letter {
+            background: #34495e;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 0.9em;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #1976d2;
+            transform: translateX(5px);
+        }
+
+        .option.selected .option-letter {
+            background: white;
+            color: #2196f3;
+        }
+
+        .chorus-section {
+            background: rgba(255, 235, 59, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .chorus-section h2 {
+            color: #f57f17;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .btn {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #34495e;
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background: #e74c3c;
+        }
+
+        .btn-reset:hover {
+            background: #c0392b;
+        }
+
+        .results {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results .castle-icon .songwriters {
+            display: none;
+        }
+
+        .results .castle-icon .singers {
+            display: block;
+        }
+
+        .final-song {
+            font-family: 'Georgia', serif;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #2c3e50;
+            max-height: 95vh;
+            overflow: auto;
+            columns: 2;
+            column-gap: 40px;
+            column-rule: 1px solid #e0e0e0;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .final-song h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            color: #8e44ad;
+            column-span: all;
+        }
+
+        .verse {
+            margin-bottom: 20px;
+            break-inside: avoid;
+        }
+
+        .verse-title {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 6px;
+            font-size: 1.1em;
+        }
+
+        .line {
+            margin-bottom: 3px;
+            padding: 1px 0;
+        }
+
+        .section-header {
+            font-weight: bold;
+            color: #8e44ad;
+            margin: 15px 0 8px 0;
+            font-size: 1.1em;
+            border-bottom: 2px solid #8e44ad;
+            padding-bottom: 3px;
+        }
+
+        .chorus-line {
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .final-song {
+                columns: 1;
+                column-rule: none;
+                font-size: 0.85em;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="main-title">Engelsholm Choir</h1>
+        </div>
+
+        <div id="voting-interface">
+            <div class="progress-bar-container">
+                <div class="progress-info">
+                    <span>Writing Our First Single</span>
+                    <span id="progress-text">0 of 15 completed</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="chorus-section">
+                <h2>Verse 1</h2>
+            </div>
+
+            <div class="voting-section">
+                <div class="question" data-question="trouble">
+                    <h3>1. Times of Trouble</h3>
+                    <div class="question-prompt">What challenges do we face in our daily life?</div>
+                    <div class="options">
+                        <div class="option" data-value="When we still need some help with audio">
+                            <div class="option-letter">A</div>
+                            "When we still need some help with audio"
+                        </div>
+                        <div class="option" data-value="When I have kitchen duty from five to six">
+                            <div class="option-letter">B</div>
+                            "When I have kitchen duty from five to six"
+                        </div>
+                        <div class="option" data-value="Does anyone have some antihistamine">
+                            <div class="option-letter">C</div>
+                            "Does anyone have some antihistamine"
+                        </div>
+                        <div class="option" data-value="Has anyone seen my sunglasses">
+                            <div class="option-letter">D</div>
+                            "Has anyone seen my sunglasses"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="helper">
+                    <h3>2. Someone Who Helps</h3>
+                    <div class="question-prompt">Who appears when we need support?</div>
+                    <div class="options">
+                        <div class="option" data-value="Anyone in Brugsen">
+                            <div class="option-letter">A</div>
+                            "Anyone in Brugsen"
+                        </div>
+                        <div class="option" data-value="We still need some help">
+                            <div class="option-letter">B</div>
+                            "We still need some help"
+                        </div>
+                        <div class="option" data-value="Everyone's welcome to join">
+                            <div class="option-letter">C</div>
+                            "Everyone's welcome to join"
+                        </div>
+                        <div class="option" data-value="Yes thank you so much">
+                            <div class="option-letter">D</div>
+                            "Yes thank you so much"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="wisdom">
+                    <h3>3. Words of Wisdom</h3>
+                    <div class="question-prompt">What guidance do we share with each other?</div>
+                    <div class="options">
+                        <div class="option" data-value="We support each other">
+                            <div class="option-letter">A</div>
+                            "We support each other"
+                        </div>
+                        <div class="option" data-value="Come and join if you want">
+                            <div class="option-letter">B</div>
+                            "Come and join if you want"
+                        </div>
+                        <div class="option" data-value="It's really easy to join">
+                            <div class="option-letter">C</div>
+                            "It's really easy to join"
+                        </div>
+                        <div class="option" data-value="Ok that would be really nice">
+                            <div class="option-letter">D</div>
+                            "Ok that would be really nice"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="simple">
+                    <h3>4. Acceptance</h3>
+                    <div class="question-prompt">How do we accept and move forward?</div>
+                    <div class="options">
+                        <div class="option" data-value="All good">
+                            <div class="option-letter">A</div>
+                            "All good"
+                        </div>
+                        <div class="option" data-value="I do">
+                            <div class="option-letter">B</div>
+                            "I do"
+                        </div>
+                        <div class="option" data-value="Lesgo">
+                            <div class="option-letter">C</div>
+                            "Lesgo"
+                        </div>
+                        <div class="option" data-value="Super">
+                            <div class="option-letter">D</div>
+                            "Super"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="darkness">
+                    <h3>5. Hour of Darkness</h3>
+                    <div class="question-prompt">What moments make us feel lost or uncertain?</div>
+                    <div class="options">
+                        <div class="option" data-value="And when I lost my speaker">
+                            <div class="option-letter">A</div>
+                            "And when I lost my speaker"
+                        </div>
+                        <div class="option" data-value="I can't make the bus because">
+                            <div class="option-letter">B</div>
+                            "I can't make the bus because"
+                        </div>
+                        <div class="option" data-value="Is there someone who can switch">
+                            <div class="option-letter">C</div>
+                            "Is there someone who can switch"
+                        </div>
+                        <div class="option" data-value="Can I borrow a bike from someone">
+                            <div class="option-letter">D</div>
+                            "Can I borrow a bike from someone"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="presence">
+                    <h3>6. Present Support</h3>
+                    <div class="question-prompt">How does our community show up for each other?</div>
+                    <div class="options">
+                        <div class="option" data-value="We're on the way we'll be there in a bit">
+                            <div class="option-letter">A</div>
+                            "We're on the way we'll be there in a bit"
+                        </div>
+                        <div class="option" data-value="Is anybody down there helping him right now">
+                            <div class="option-letter">B</div>
+                            "Is anybody down there helping him right now"
+                        </div>
+                        <div class="option" data-value="We are Engelsholm, we support each other">
+                            <div class="option-letter">C</div>
+                            "We are Engelsholm, we support each other"
+                        </div>
+                        <div class="option" data-value="We are outside playing football if anyone wants to join">
+                            <div class="option-letter">D</div>
+                            "We are outside playing football if anyone wants to join"
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="chorus-section">
+                <h2>Verse 2</h2>
+            </div>
+
+            <div class="voting-section">
+                <div class="question" data-question="agreement">
+                    <h3>7. Community Unity</h3>
+                    <div class="question-prompt">What brings our community together in agreement?</div>
+                    <div class="options">
+                        <div class="option" data-value="If anyone wants to join football it's happening right now">
+                            <div class="option-letter">A</div>
+                            "If anyone wants to join football it's happening right now"
+                        </div>
+                        <div class="option" data-value="Come join and make some noodles with us">
+                            <div class="option-letter">B</div>
+                            "Come join and make some noodles with us"
+                        </div>
+                        <div class="option" data-value="Does anyone want food from elite pizza with us">
+                            <div class="option-letter">C</div>
+                            "Does anyone want food from elite pizza with us"
+                        </div>
+                        <div class="option" data-value="But we'll take the twenty forty-five if we're going I think">
+                            <div class="option-letter">D</div>
+                            "But we'll take the twenty forty-five if we're going I think"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="answer">
+                    <h3>8. Hope & Solutions</h3>
+                    <div class="question-prompt">What hope do we hold onto?</div>
+                    <div class="options">
+                        <div class="option" data-value="Someone lent me one, so it's all good after all">
+                            <div class="option-letter">A</div>
+                            "Someone lent me one, so it's all good after all"
+                        </div>
+                        <div class="option" data-value="This could be our chance">
+                            <div class="option-letter">B</div>
+                            "This could be our chance"
+                        </div>
+                        <div class="option" data-value="Hope you have good party">
+                            <div class="option-letter">C</div>
+                            "Hope you have good party"
+                        </div>
+                        <div class="option" data-value="Can try once again">
+                            <div class="option-letter">D</div>
+                            "Can try once again"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="parted">
+                    <h3>9. Separation</h3>
+                    <div class="question-prompt">What separates us or goes missing from our lives?</div>
+                    <div class="options">
+                        <div class="option" data-value="My mom has lost her glasses">
+                            <div class="option-letter">A</div>
+                            "My mom has lost her glasses"
+                        </div>
+                        <div class="option" data-value="Has anyone seen Pelle">
+                            <div class="option-letter">B</div>
+                            "Has anyone seen Pelle"
+                        </div>
+                        <div class="option" data-value="Anyone seen this shirt">
+                            <div class="option-letter">C</div>
+                            "Anyone seen this shirt"
+                        </div>
+                        <div class="option" data-value="I've lost my airpods">
+                            <div class="option-letter">D</div>
+                            "I've lost my airpods"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="chance">
+                    <h3>10. Possibility</h3>
+                    <div class="question-prompt">What possibilities keep us hopeful?</div>
+                    <div class="options">
+                        <div class="option" data-value="Maybe I can call and see if they'll come">
+                            <div class="option-letter">A</div>
+                            "Maybe I can call and see if they'll come"
+                        </div>
+                        <div class="option" data-value="Hope you all have such a good party">
+                            <div class="option-letter">B</div>
+                            "Hope you all have such a good party"
+                        </div>
+                        <div class="option" data-value="Also looking to borrow a bike if anyone has">
+                            <div class="option-letter">C</div>
+                            "Also looking to borrow a bike if anyone has"
+                        </div>
+                        <div class="option" data-value="This could be our only chance">
+                            <div class="option-letter">D</div>
+                            "This could be our only chance"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="light">
+                    <h3>11. Light in Darkness</h3>
+                    <div class="question-prompt">What brightens our difficult moments?</div>
+                    <div class="options">
+                        <div class="option" data-value="There is still a bonfire at half past seven">
+                            <div class="option-letter">A</div>
+                            "There is still a bonfire at half past seven"
+                        </div>
+                        <div class="option" data-value="We are Engelsholm, we support each other">
+                            <div class="option-letter">B</div>
+                            "We are Engelsholm, we support each other"
+                        </div>
+                        <div class="option" data-value="Come join and make some noodles with us">
+                            <div class="option-letter">C</div>
+                            "Come join and make some noodles with us"
+                        </div>
+                        <div class="option" data-value="It was so much fun, thank you for your effort">
+                            <div class="option-letter">D</div>
+                            "It was so much fun, thank you for your effort"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="tomorrow">
+                    <h3>12. Tomorrow</h3>
+                    <div class="question-prompt">What keeps us going into the future?</div>
+                    <div class="options">
+                        <div class="option" data-value="Looking forward to the movie">
+                            <div class="option-letter">A</div>
+                            "Looking forward to the movie"
+                        </div>
+                        <div class="option" data-value="Hope to see you there">
+                            <div class="option-letter">B</div>
+                            "Hope to see you there"
+                        </div>
+                        <div class="option" data-value="We'll be there in a bit">
+                            <div class="option-letter">C</div>
+                            "We'll be there in a bit"
+                        </div>
+                        <div class="option" data-value="Looking forward to the movie">
+                            <div class="option-letter">D</div>
+                            "Looking forward to the movie"
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="chorus-section">
+                <h2>Bridge</h2>
+            </div>
+
+            <div class="voting-section">
+                <div class="question" data-question="music">
+                    <h3>13. Awakening</h3>
+                    <div class="question-prompt">What sounds or moments wake us to new possibilities?</div>
+                    <div class="options">
+                        <div class="option" data-value="I wake up to the sound of Spotify">
+                            <div class="option-letter">A</div>
+                            "I wake up to the sound of Spotify"
+                        </div>
+                        <div class="option" data-value="I wake up to the sound of vacuum">
+                            <div class="option-letter">B</div>
+                            "I wake up to the sound of vacuum"
+                        </div>
+                        <div class="option" data-value="I wake up to someone calling my name">
+                            <div class="option-letter">C</div>
+                            "I wake up to someone calling my name"
+                        </div>
+                        <div class="option" data-value="I wake up to the sound of laughter">
+                            <div class="option-letter">D</div>
+                            "I wake up to the sound of laughter"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chorus-section">
+                <h2>Chorus</h2>
+
+                <div class="question" data-question="chorus-main">
+                    <h3>14. Main Refrain</h3>
+                    <div class="question-prompt">What phrase should we repeat as our collective response?</div>
+                    <div class="options">
+                        <div class="option" data-value="No way, no way, no way, no way">
+                            <div class="option-letter">A</div>
+                            "No way, no way, no way, no way"
+                        </div>
+                        <div class="option" data-value="Brugsen, Brugsen, Brugsen, Brugsen">
+                            <div class="option-letter">B</div>
+                            "Brugsen, Brugsen, Brugsen, Brugsen"
+                        </div>
+                        <div class="option" data-value="Pizza time, pizza time, pizza time, pizza time">
+                            <div class="option-letter">C</div>
+                            "Pizza time, pizza time, pizza time, pizza time"
+                        </div>
+                        <div class="option" data-value="THANKYOU BABE, THANKYOU BABE, THANKYOU BABE, THANKYOU BABE">
+                            <div class="option-letter">D</div>
+                            "THANKYOU BABE, THANKYOU BABE, THANKYOU BABE, THANKYOU BABE"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" data-question="whisper">
+                    <h3>15. Gentle Wisdom</h3>
+                    <div class="question-prompt">What gentle wisdom should we whisper?</div>
+                    <div class="options">
+                        <div class="option" data-value="Someone lent me something">
+                            <div class="option-letter">A</div>
+                            "Someone lent me something"
+                        </div>
+                        <div class="option" data-value="Yes thank you so much">
+                            <div class="option-letter">B</div>
+                            "Yes thank you so much"
+                        </div>
+                        <div class="option" data-value="It's really quite easy">
+                            <div class="option-letter">C</div>
+                            "It's really quite easy"
+                        </div>
+                        <div class="option" data-value="We support each other">
+                            <div class="option-letter">D</div>
+                            "We support each other"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="show-song" disabled>Show Our Complete Song</button>
+                <button class="btn btn-reset" onclick="resetAll()">Reset All</button>
+            </div>
+        </div>
+
+        <div id="results" class="results">
+            <div class="final-song">
+                <div class="section-header">Verse 1</div>
+                <div class="line" id="line-trouble"></div>
+                <div class="line" id="line-helper"></div>
+                <div class="line" id="line-wisdom1"></div>
+                <div class="line" id="line-simple1"></div>
+                <div class="line" id="line-darkness"></div>
+                <div class="line" id="line-presence"></div>
+                <div class="line" id="line-wisdom2"></div>
+                <div class="line" id="line-simple2"></div>
+
+                <div class="section-header">Chorus</div>
+                <div class="line chorus-line" id="line-chorus1"></div>
+                <div class="line chorus-line" id="line-whisper1"></div>
+                <div class="line chorus-line" id="line-simple3"></div>
+
+                <div class="section-header">Verse 2</div>
+                <div class="line" id="line-agreement"></div>
+                <div class="line" id="line-answer1"></div>
+                <div class="line" id="line-simple4"></div>
+                <div class="line" id="line-parted"></div>
+                <div class="line" id="line-chance"></div>
+                <div class="line" id="line-answer2"></div>
+                <div class="line" id="line-simple5"></div>
+
+                <div class="section-header">Extended Chorus</div>
+                <div class="line chorus-line" id="line-chorus2"></div>
+                <div class="line chorus-line" id="line-answer3"></div>
+                <div class="line chorus-line" id="line-simple6"></div>
+                <div class="line chorus-line" id="line-chorus3"></div>
+                <div class="line chorus-line" id="line-whisper2"></div>
+                <div class="line chorus-line" id="line-simple7"></div>
+                <div class="line chorus-line" id="line-chorus4"></div>
+                <div class="line chorus-line" id="line-whisper3"></div>
+                <div class="line chorus-line" id="line-simple8"></div>
+
+                <div class="section-header">Bridge</div>
+                <div class="line" id="line-light"></div>
+                <div class="line" id="line-tomorrow"></div>
+                <div class="line" id="line-simple9"></div>
+                <div class="line" id="line-music"></div>
+                <div class="line" id="line-helper2"></div>
+                <div class="line" id="line-wisdom3"></div>
+                <div class="line" id="line-simple10"></div>
+
+                <div class="section-header">Final Chorus</div>
+                <div class="line chorus-line" id="line-chorus5"></div>
+                <div class="line chorus-line" id="line-whisper4"></div>
+                <div class="line chorus-line" id="line-simple11"></div>
+                <div class="line chorus-line" id="line-chorus6"></div>
+                <div class="line chorus-line" id="line-whisper5"></div>
+                <div class="line chorus-line" id="line-simple12"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-reset" onclick="resetAll()">Create New Version</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let choices = {};
+        const requiredChoices = ['trouble', 'helper', 'wisdom', 'simple', 'darkness', 'presence',
+                               'agreement', 'answer', 'parted', 'chance', 'light', 'tomorrow',
+                               'music', 'chorus-main', 'whisper'];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateProgress();
+        });
+
+        function setupEventListeners() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const question = this.closest('.question').dataset.question;
+                    const value = this.dataset.value;
+
+                    // Clear previous selection
+                    this.closest('.question').querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+
+                    // Select this option
+                    this.classList.add('selected');
+                    choices[question] = value;
+
+                    updateProgress();
+                    checkCompletion();
+                });
+            });
+
+            document.getElementById('show-song').addEventListener('click', showResults);
+        }
+
+        function updateProgress() {
+            const completed = Object.keys(choices).length;
+            const percentage = (completed / requiredChoices.length) * 100;
+
+            document.getElementById('progress-text').textContent = `${completed} of ${requiredChoices.length} completed`;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+        }
+
+        function checkCompletion() {
+            const complete = requiredChoices.every(q => choices[q]);
+            document.getElementById('show-song').disabled = !complete;
+        }
+
+        function showResults() {
+            // Update main title with chosen chorus (first part only)
+            const chorusTitle = choices['chorus-main'].split(',')[0].trim();
+            document.getElementById('main-title').textContent = `Engelsholm Choir - ${chorusTitle}`;
+
+            // Populate all the lines
+            document.getElementById('line-trouble').textContent = choices.trouble;
+            document.getElementById('line-helper').textContent = choices.helper;
+            document.getElementById('line-helper2').textContent = choices.helper;
+            document.getElementById('line-wisdom1').textContent = choices.wisdom;
+            document.getElementById('line-wisdom2').textContent = choices.wisdom;
+            document.getElementById('line-wisdom3').textContent = choices.wisdom;
+            document.getElementById('line-simple1').textContent = choices.simple;
+            document.getElementById('line-simple2').textContent = choices.simple;
+            document.getElementById('line-simple3').textContent = choices.simple;
+            document.getElementById('line-simple4').textContent = choices.simple;
+            document.getElementById('line-simple5').textContent = choices.simple;
+            document.getElementById('line-simple6').textContent = choices.simple;
+            document.getElementById('line-simple7').textContent = choices.simple;
+            document.getElementById('line-simple8').textContent = choices.simple;
+            document.getElementById('line-simple9').textContent = choices.simple;
+            document.getElementById('line-simple10').textContent = choices.simple;
+            document.getElementById('line-simple11').textContent = choices.simple;
+            document.getElementById('line-simple12').textContent = choices.simple;
+            document.getElementById('line-darkness').textContent = choices.darkness;
+            document.getElementById('line-presence').textContent = choices.presence;
+            document.getElementById('line-agreement').textContent = choices.agreement;
+            document.getElementById('line-answer1').textContent = choices.answer;
+            document.getElementById('line-answer2').textContent = choices.answer;
+            document.getElementById('line-answer3').textContent = choices.answer;
+            document.getElementById('line-parted').textContent = choices.parted;
+            document.getElementById('line-chance').textContent = choices.chance;
+            document.getElementById('line-light').textContent = choices.light;
+            document.getElementById('line-tomorrow').textContent = choices.tomorrow;
+            document.getElementById('line-music').textContent = choices.music;
+
+            // Chorus elements
+            document.getElementById('line-chorus1').textContent = choices['chorus-main'];
+            document.getElementById('line-chorus2').textContent = choices['chorus-main'];
+            document.getElementById('line-chorus3').textContent = choices['chorus-main'];
+            document.getElementById('line-chorus4').textContent = choices['chorus-main'];
+            document.getElementById('line-chorus5').textContent = choices['chorus-main'];
+            document.getElementById('line-chorus6').textContent = choices['chorus-main'];
+
+            document.getElementById('line-whisper1').textContent = choices.whisper + ', ' + choices.simple;
+            document.getElementById('line-whisper2').textContent = choices.whisper + ', ' + choices.simple;
+            document.getElementById('line-whisper3').textContent = choices.whisper + ', ' + choices.simple + ', ' + choices.simple;
+            document.getElementById('line-whisper4').textContent = choices.whisper + ', ' + choices.simple;
+            document.getElementById('line-whisper5').textContent = choices.whisper + ', ' + choices.simple;
+
+            // Hide voting, show results
+            document.getElementById('voting-interface').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+        }
+
+        function resetAll() {
+            choices = {};
+            document.querySelectorAll('.option.selected').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.getElementById('show-song').disabled = true;
+            document.getElementById('voting-interface').style.display = 'block';
+            document.getElementById('results').classList.remove('show');
+            updateProgress();
+        }
+    </script>
+</body>
+</html>

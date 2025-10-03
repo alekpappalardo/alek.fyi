@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo | Alek, with a K</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f5f3ed;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(71, 160, 220, 0.3) 29px, rgba(71, 160, 220, 0.3) 31px);
+            pointer-events: none;
+            z-index: -1;
+        }
+        header {
+            padding: 30px 20px 15px;
+            text-align: center;
+        }
+        h1 {
+            font-size: clamp(36px, 8vw, 72px);
+            color: #FF1744;
+            text-shadow: 3px 3px 0px #000, 5px 5px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            cursor: pointer;
+            display: inline-block;
+        }
+        .section-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .section-title h2 {
+            font-size: clamp(40px, 7vw, 64px);
+            color: #9C27B0;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.15);
+            transform: rotate(-1deg);
+            display: inline-block;
+            padding: 10px 25px;
+            border: 5px solid #9C27B0;
+            border-radius: 40% 60% 45% 55% / 55% 45% 55% 45%;
+            background: rgba(33, 150, 243, 0.1);
+        }
+        .coming-soon {
+            text-align: center;
+            margin: 100px 20px;
+            font-size: clamp(24px, 4vw, 36px);
+            color: #666;
+            transform: rotate(1deg);
+        }
+        .emoji { font-size: 80px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Alek, with a K</h1>
+    </header>
+    <div class="section-title">
+        <h2>Photo</h2>
+    </div>
+    <div class="coming-soon">
+        <div class="emoji">📸</div>
+        <p>Coming soon...</p>
+    </div>
+</body>
+</html>

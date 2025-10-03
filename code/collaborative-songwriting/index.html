@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Songwriting | Alek, with a K</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f3ed;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Paper texture background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 29px,
+                    rgba(71, 160, 220, 0.3) 29px,
+                    rgba(71, 160, 220, 0.3) 31px
+                );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            padding: 30px 20px 15px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(36px, 8vw, 72px);
+            color: #FF1744;
+            text-shadow:
+                3px 3px 0px #000,
+                5px 5px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        h1:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        /* App container - irregular kid-drawn border */
+        .app-container {
+            max-width: 1600px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .irregular-box {
+            background: white;
+            border: 8px solid #4CAF50;
+            border-radius: 52% 48% 49% 51% / 46% 54% 46% 54%;
+            padding: 30px;
+            box-shadow:
+                8px 8px 0px rgba(0,0,0,0.1),
+                0 0 0 2px #fff,
+                0 0 0 10px rgba(76, 175, 80, 0.2);
+            position: relative;
+            min-height: 800px;
+            transform: rotate(0.5deg);
+        }
+
+        /* Decorative doodles */
+        .irregular-box::before {
+            content: '🎵';
+            position: absolute;
+            top: -40px;
+            left: 30px;
+            font-size: 56px;
+            transform: rotate(-15deg);
+        }
+
+        .irregular-box::after {
+            content: '✍️';
+            position: absolute;
+            top: -35px;
+            right: 40px;
+            font-size: 48px;
+        }
+
+        /* Project title */
+        .project-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .project-title h2 {
+            font-size: clamp(28px, 5vw, 48px);
+            color: #4CAF50;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            transform: rotate(-1deg);
+            display: inline-block;
+            padding: 10px 20px;
+            border: 4px solid #4CAF50;
+            border-radius: 50% 45% 55% 50% / 55% 50% 45% 50%;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        /* Iframe container */
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 120%;
+            min-height: 800px;
+        }
+
+        .iframe-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+            border-radius: 12px;
+        }
+
+        /* Back button */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: #FF9800;
+            border: 5px solid #000;
+            border-radius: 50% 45% 55% 50%;
+            padding: 15px 25px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            text-decoration: none;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1000;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+            box-shadow: 7px 7px 0px rgba(0,0,0,0.3);
+        }
+
+        .back-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 48px;
+            }
+
+            .irregular-box {
+                padding: 20px;
+                border-width: 6px;
+            }
+
+            .project-title h2 {
+                font-size: 32px;
+            }
+
+            .back-button {
+                bottom: 20px;
+                left: 20px;
+                padding: 12px 20px;
+                font-size: 20px;
+            }
+
+            .iframe-wrapper {
+                min-height: 600px;
+                padding-bottom: 150%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Alek, with a K</h1>
+    </header>
+
+    <div class="app-container">
+        <div class="irregular-box">
+            <div class="project-title">
+                <h2>Collaborative Songwriting</h2>
+            </div>
+
+            <div class="iframe-wrapper">
+                <iframe src="app.html" title="Collaborative Songwriting App"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <a href="../index.html" class="back-button">← Code</a>
+</body>
+</html>
