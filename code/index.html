@@ -13,6 +13,7 @@
 
         body {
             background: #ffffff;
+            color: #1a1a1a;
             font-family: 'Times New Roman', Times, serif;
             overflow-x: hidden;
             position: relative;
@@ -97,34 +98,25 @@
             color: #ffffff;
         }
 
-        /* Projects container - scattered like notes */
+        /* Projects container - right-justified horizontal list */
         .projects-container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
-            position: relative;
-            min-height: 50vh;
+            text-align: right;
         }
 
-        /* Project links - handwritten style on paper */
+        /* Project links */
         .project {
-            position: absolute;
             cursor: pointer;
             transition: opacity 0.2s;
             text-decoration: none;
             display: inline-block;
+            margin-left: 40px;
         }
 
-        .project:nth-child(1) {
-            top: 20%;
-            left: 15%;
-            transform: rotate(-2deg);
-        }
-
-        .project:nth-child(2) {
-            top: 40%;
-            right: 20%;
-            transform: rotate(3deg);
+        .project:first-child {
+            margin-left: 0;
         }
 
         .project:hover {
@@ -133,13 +125,9 @@
 
         .project h3 {
             font-size: clamp(24px, 4vw, 36px);
-            color: #1a1a1a;
+            color: inherit;
             font-weight: 400;
             letter-spacing: -0.5px;
-        }
-
-        body.dark-mode .project h3 {
-            color: #ffffff;
         }
 
         /* Responsive */
@@ -153,17 +141,12 @@
             }
 
             .projects-container {
-                min-height: 60vh;
+                text-align: center;
             }
 
-            .project:nth-child(1) {
-                top: 15%;
-                left: 10%;
-            }
-
-            .project:nth-child(2) {
-                top: 40%;
-                right: 10%;
+            .project {
+                display: block;
+                margin: 20px 0;
             }
 
             .project h3 {

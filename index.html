@@ -13,6 +13,7 @@
 
         body {
             background: #ffffff;
+            color: #1a1a1a;
             font-family: 'Times New Roman', Times, serif;
             overflow-x: hidden;
             position: relative;
@@ -93,36 +94,20 @@
             max-width: 1200px;
             margin: 60px auto;
             padding: 20px;
-            position: relative;
-            min-height: 60vh;
+            text-align: right;
         }
 
-        /* Section word boxes - randomly positioned */
+        /* Section word boxes - right-justified horizontal list */
         .section-word {
-            position: absolute;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
             transition: opacity 0.2s;
+            margin-left: 40px;
         }
 
-        /* Random positioning for handwritten note feel */
-        .section-word:nth-child(1) { /* Music */
-            top: 25%;
-            left: 20%;
-            transform: rotate(-4deg);
-        }
-
-        .section-word:nth-child(2) { /* Code */
-            top: 45%;
-            right: 25%;
-            transform: rotate(3deg);
-        }
-
-        .section-word:nth-child(3) { /* Write */
-            top: 65%;
-            left: 30%;
-            transform: rotate(2deg);
+        .section-word:first-child {
+            margin-left: 0;
         }
 
         .section-word .text {
@@ -132,15 +117,7 @@
             display: inline-block;
             position: relative;
             letter-spacing: -0.5px;
-        }
-
-        /* All text in black */
-        .section-word .text {
-            color: #1a1a1a;
-        }
-
-        body.dark-mode .section-word .text {
-            color: #ffffff;
+            color: inherit;
         }
 
         /* Hover effects */
@@ -156,18 +133,18 @@
 
             .sections-container {
                 margin: 40px auto;
-                min-height: 80vh;
+                text-align: center;
+            }
+
+            .section-word {
+                display: block;
+                margin: 20px 0;
             }
 
             .section-word .text {
                 font-size: 40px;
                 padding: 12px 24px;
             }
-
-            /* Adjust positions for mobile */
-            .section-word:nth-child(1) { top: 20%; left: 10%; }
-            .section-word:nth-child(2) { top: 45%; right: 10%; }
-            .section-word:nth-child(3) { top: 70%; left: 15%; }
 
             .theme-toggle {
                 top: 20px;
