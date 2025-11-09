@@ -1,0 +1,9 @@
+This is a sample writing to demonstrate how the system works.
+
+You can add your own writings by dropping .txt files into the write/writing folder, then running the build script with:
+
+node write/build-writings.js
+
+Each piece will be separated by a horizontal divider, with the most recent writings appearing first.
+
+The content preserves formatting, so you can write naturally with line breaks and spacing as you prefer.

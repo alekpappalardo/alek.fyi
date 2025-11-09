@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>alek</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -15,10 +13,16 @@
 
         body {
             background: #ffffff;
-            font-family: 'Reenie Beanie', cursive;
+            font-family: 'Times New Roman', Times, serif;
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
         }
 
         /* Subtle paper texture - no lines */
@@ -33,6 +37,29 @@
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: -1;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.6;
+        }
+
+        .theme-toggle img {
+            width: 40px;
+            height: 40px;
+            display: block;
         }
 
         /* Header - always visible */
@@ -51,6 +78,10 @@
             transition: opacity 0.2s;
             position: relative;
             display: inline-block;
+        }
+
+        body.dark-mode h1 {
+            color: #ffffff;
         }
 
         h1:hover {
@@ -88,6 +119,12 @@
             transform: rotate(3deg);
         }
 
+        .section-word:nth-child(3) { /* Write */
+            top: 65%;
+            left: 30%;
+            transform: rotate(2deg);
+        }
+
         .section-word .text {
             font-size: clamp(32px, 5vw, 56px);
             font-weight: 400;
@@ -100,6 +137,10 @@
         /* All text in black */
         .section-word .text {
             color: #1a1a1a;
+        }
+
+        body.dark-mode .section-word .text {
+            color: #ffffff;
         }
 
         /* Hover effects */
@@ -124,12 +165,27 @@
             }
 
             /* Adjust positions for mobile */
-            .section-word:nth-child(1) { top: 25%; left: 10%; }
-            .section-word:nth-child(2) { top: 50%; right: 10%; }
+            .section-word:nth-child(1) { top: 20%; left: 10%; }
+            .section-word:nth-child(2) { top: 45%; right: 10%; }
+            .section-word:nth-child(3) { top: 70%; left: 15%; }
+
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+            }
+
+            .theme-toggle img {
+                width: 30px;
+                height: 30px;
+            }
         }
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <img id="theme-icon" src="moon.png" alt="Toggle theme">
+    </button>
+
     <div class="sections-container">
         <a href="music/index.html" class="section-word">
             <div class="text">music</div>
@@ -138,6 +194,33 @@
         <a href="code/index.html" class="section-word">
             <div class="text">code</div>
         </a>
+
+        <a href="write/index.html" class="section-word">
+            <div class="text">write</div>
+        </a>
     </div>
+
+    <script>
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('theme-icon').src = 'sun.png';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            const icon = document.getElementById('theme-icon');
+
+            if (isDark) {
+                icon.src = 'sun.png';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.src = 'moon.png';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+    </script>
 </body>
 </html>

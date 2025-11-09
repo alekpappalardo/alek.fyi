@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>write</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'Times New Roman', Times, serif;
+            min-height: 100vh;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulature type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: opacity 0.2s;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.6;
+        }
+
+        .theme-toggle img {
+            width: 40px;
+            height: 40px;
+            display: block;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: clamp(24px, 4vw, 32px);
+            color: #1a1a1a;
+            font-weight: 400;
+            letter-spacing: -1px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        body.dark-mode .back-button {
+            color: #ffffff;
+        }
+
+        .back-button:hover {
+            opacity: 0.6;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 30px 0 50px;
+            padding-top: 20px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            color: #1a1a1a;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            display: inline-block;
+            padding: 10px 20px;
+        }
+
+        body.dark-mode .section-title h2 {
+            color: #ffffff;
+        }
+
+        .writings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+        .writing-piece {
+            margin-bottom: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        body.dark-mode .writing-piece {
+            border-bottom-color: #ffffff;
+        }
+
+        .writing-piece:last-child {
+            border-bottom: none;
+        }
+
+        .writing-title {
+            font-size: clamp(24px, 4vw, 32px);
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .writing-title {
+            color: #ffffff;
+        }
+
+        .writing-date {
+            font-size: clamp(14px, 3vw, 18px);
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .writing-date {
+            color: #999;
+        }
+
+        .writing-content {
+            font-size: clamp(16px, 3.5vw, 20px);
+            line-height: 1.8;
+            color: #1a1a1a;
+            white-space: pre-wrap;
+        }
+
+        body.dark-mode .writing-content {
+            color: #ffffff;
+        }
+
+        .divider {
+            width: 50%;
+            height: 1px;
+            background: #1a1a1a;
+            margin: 60px auto;
+        }
+
+        body.dark-mode .divider {
+            background: #ffffff;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: clamp(18px, 4vw, 24px);
+            color: #666;
+            padding: 60px 20px;
+        }
+
+        body.dark-mode .loading {
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
+            }
+
+            .theme-toggle img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .writings-container {
+                padding: 20px 20px 100px;
+            }
+
+            .writing-piece {
+                margin-bottom: 40px;
+                padding-bottom: 40px;
+            }
+
+            .divider {
+                margin: 40px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <img id="theme-icon" src="../moon.png" alt="Toggle theme">
+    </button>
+
+    <div class="section-title">
+        <h2>write</h2>
+    </div>
+
+    <div class="writings-container" id="writings-container">
+        <div class="loading">Loading writings...</div>
+    </div>
+
+    <a href="/" class="back-button">← back</a>
+
+    <script>
+        // Theme toggle functionality
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('theme-icon').src = '../sun.png';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            const icon = document.getElementById('theme-icon');
+
+            if (isDark) {
+                icon.src = '../sun.png';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.src = '../moon.png';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load writings from manifest
+        async function loadWritings() {
+            try {
+                const response = await fetch('writings-manifest.json');
+                const manifest = await response.json();
+
+                const container = document.getElementById('writings-container');
+                container.innerHTML = '';
+
+                if (manifest.writings.length === 0) {
+                    container.innerHTML = '<div class="loading">No writings yet.</div>';
+                    return;
+                }
+
+                for (let i = 0; i < manifest.writings.length; i++) {
+                    const writing = manifest.writings[i];
+
+                    // Fetch the content
+                    const contentResponse = await fetch(writing.filename);
+                    const content = await contentResponse.text();
+
+                    // Create writing element
+                    const piece = document.createElement('div');
+                    piece.className = 'writing-piece';
+
+                    const title = document.createElement('div');
+                    title.className = 'writing-title';
+                    title.textContent = writing.title;
+
+                    const date = document.createElement('div');
+                    date.className = 'writing-date';
+                    date.textContent = new Date(writing.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'writing-content';
+                    contentDiv.textContent = content;
+
+                    piece.appendChild(title);
+                    piece.appendChild(date);
+                    piece.appendChild(contentDiv);
+
+                    container.appendChild(piece);
+
+                    // Add divider between pieces (not after last one)
+                    if (i < manifest.writings.length - 1) {
+                        const divider = document.createElement('div');
+                        divider.className = 'divider';
+                        container.appendChild(divider);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading writings:', error);
+                document.getElementById('writings-container').innerHTML =
+                    '<div class="loading">Error loading writings. Please check the console.</div>';
+            }
+        }
+
+        // Load writings when page loads
+        loadWritings();
+    </script>
+</body>
+</html>
