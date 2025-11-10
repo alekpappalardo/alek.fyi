@@ -94,28 +94,26 @@
             max-width: 1200px;
             margin: 60px auto;
             padding: 20px;
-            text-align: right;
+            text-align: center;
         }
 
-        /* Section word boxes - right-justified horizontal list */
+        .sections-container ol {
+            list-style-position: inside;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .sections-container li {
+            margin: 20px 0;
+        }
+
+        /* Section word links */
         .section-word {
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
             transition: opacity 0.2s;
-            margin-left: 40px;
-        }
-
-        .section-word:first-child {
-            margin-left: 0;
-        }
-
-        .section-word .text {
             font-size: clamp(32px, 5vw, 56px);
             font-weight: 400;
-            padding: 10px 20px;
-            display: inline-block;
-            position: relative;
             letter-spacing: -0.5px;
             color: inherit;
         }
@@ -137,13 +135,7 @@
             }
 
             .section-word {
-                display: block;
-                margin: 20px 0;
-            }
-
-            .section-word .text {
                 font-size: 40px;
-                padding: 12px 24px;
             }
 
             .theme-toggle {
@@ -160,21 +152,15 @@
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <img id="theme-icon" src="moon.png" alt="Toggle theme">
+        <img id="theme-icon" src="mode-black.png" alt="Toggle theme">
     </button>
 
     <div class="sections-container">
-        <a href="music/index.html" class="section-word">
-            <div class="text">music</div>
-        </a>
-
-        <a href="code/index.html" class="section-word">
-            <div class="text">code</div>
-        </a>
-
-        <a href="write/index.html" class="section-word">
-            <div class="text">write</div>
-        </a>
+        <ol>
+            <li><a href="music/index.html" class="section-word">music</a></li>
+            <li><a href="code/index.html" class="section-word">code</a></li>
+            <li><a href="write/index.html" class="section-word">write</a></li>
+        </ol>
     </div>
 
     <script>
@@ -182,7 +168,7 @@
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            document.getElementById('theme-icon').src = 'sun.png';
+            document.getElementById('theme-icon').src = 'mode-white.png';
         }
 
         function toggleTheme() {
@@ -191,10 +177,10 @@
             const icon = document.getElementById('theme-icon');
 
             if (isDark) {
-                icon.src = 'sun.png';
+                icon.src = 'mode-white.png';
                 localStorage.setItem('theme', 'dark');
             } else {
-                icon.src = 'moon.png';
+                icon.src = 'mode-black.png';
                 localStorage.setItem('theme', 'light');
             }
         }

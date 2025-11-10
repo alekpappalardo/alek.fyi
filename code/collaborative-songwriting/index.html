@@ -177,7 +177,7 @@
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <img id="theme-icon" src="../../moon.png" alt="Toggle theme">
+        <img id="theme-icon" src="../../mode-black.png" alt="Toggle theme">
     </button>
 
     <div class="app-container">
@@ -198,7 +198,7 @@
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            document.getElementById('theme-icon').src = '../../sun.png';
+            document.getElementById('theme-icon').src = '../../mode-white.png';
         }
 
         function toggleTheme() {
@@ -207,10 +207,10 @@
             const icon = document.getElementById('theme-icon');
 
             if (isDark) {
-                icon.src = '../../sun.png';
+                icon.src = '../../mode-white.png';
                 localStorage.setItem('theme', 'dark');
             } else {
-                icon.src = '../../moon.png';
+                icon.src = '../../mode-black.png';
                 localStorage.setItem('theme', 'light');
             }
         }

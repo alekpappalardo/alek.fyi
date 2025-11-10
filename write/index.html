@@ -100,81 +100,6 @@
             color: #ffffff;
         }
 
-        .writings-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px 100px;
-        }
-
-        .writing-piece {
-            margin-bottom: 60px;
-            padding-bottom: 60px;
-            border-bottom: 1px solid #1a1a1a;
-        }
-
-        body.dark-mode .writing-piece {
-            border-bottom-color: #ffffff;
-        }
-
-        .writing-piece:last-child {
-            border-bottom: none;
-        }
-
-        .writing-title {
-            font-size: clamp(24px, 4vw, 32px);
-            color: #1a1a1a;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        body.dark-mode .writing-title {
-            color: #ffffff;
-        }
-
-        .writing-date {
-            font-size: clamp(14px, 3vw, 18px);
-            color: #666;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-
-        body.dark-mode .writing-date {
-            color: #999;
-        }
-
-        .writing-content {
-            font-size: clamp(16px, 3.5vw, 20px);
-            line-height: 1.8;
-            color: #1a1a1a;
-            white-space: pre-wrap;
-        }
-
-        body.dark-mode .writing-content {
-            color: #ffffff;
-        }
-
-        .divider {
-            width: 50%;
-            height: 1px;
-            background: #1a1a1a;
-            margin: 60px auto;
-        }
-
-        body.dark-mode .divider {
-            background: #ffffff;
-        }
-
-        .loading {
-            text-align: center;
-            font-size: clamp(18px, 4vw, 24px);
-            color: #666;
-            padding: 60px 20px;
-        }
-
-        body.dark-mode .loading {
-            color: #999;
-        }
-
         @media (max-width: 768px) {
             .theme-toggle {
                 top: 20px;
@@ -185,33 +110,16 @@
                 width: 30px;
                 height: 30px;
             }
-
-            .writings-container {
-                padding: 20px 20px 100px;
-            }
-
-            .writing-piece {
-                margin-bottom: 40px;
-                padding-bottom: 40px;
-            }
-
-            .divider {
-                margin: 40px auto;
-            }
         }
     </style>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-        <img id="theme-icon" src="../moon.png" alt="Toggle theme">
+        <img id="theme-icon" src="../mode-black.png" alt="Toggle theme">
     </button>
 
     <div class="section-title">
-        <h2>write</h2>
-    </div>
-
-    <div class="writings-container" id="writings-container">
-        <div class="loading">Loading writings...</div>
+        <h2>↳write</h2>
     </div>
 
     <a href="/" class="back-button">← back</a>
@@ -221,7 +129,7 @@
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            document.getElementById('theme-icon').src = '../sun.png';
+            document.getElementById('theme-icon').src = '../mode-white.png';
         }
 
         function toggleTheme() {
@@ -230,77 +138,13 @@
             const icon = document.getElementById('theme-icon');
 
             if (isDark) {
-                icon.src = '../sun.png';
+                icon.src = '../mode-white.png';
                 localStorage.setItem('theme', 'dark');
             } else {
-                icon.src = '../moon.png';
+                icon.src = '../mode-black.png';
                 localStorage.setItem('theme', 'light');
             }
         }
-
-        // Load writings from manifest
-        async function loadWritings() {
-            try {
-                const response = await fetch('writings-manifest.json');
-                const manifest = await response.json();
-
-                const container = document.getElementById('writings-container');
-                container.innerHTML = '';
-
-                if (manifest.writings.length === 0) {
-                    container.innerHTML = '<div class="loading">No writings yet.</div>';
-                    return;
-                }
-
-                for (let i = 0; i < manifest.writings.length; i++) {
-                    const writing = manifest.writings[i];
-
-                    // Fetch the content
-                    const contentResponse = await fetch(writing.filename);
-                    const content = await contentResponse.text();
-
-                    // Create writing element
-                    const piece = document.createElement('div');
-                    piece.className = 'writing-piece';
-
-                    const title = document.createElement('div');
-                    title.className = 'writing-title';
-                    title.textContent = writing.title;
-
-                    const date = document.createElement('div');
-                    date.className = 'writing-date';
-                    date.textContent = new Date(writing.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-
-                    const contentDiv = document.createElement('div');
-                    contentDiv.className = 'writing-content';
-                    contentDiv.textContent = content;
-
-                    piece.appendChild(title);
-                    piece.appendChild(date);
-                    piece.appendChild(contentDiv);
-
-                    container.appendChild(piece);
-
-                    // Add divider between pieces (not after last one)
-                    if (i < manifest.writings.length - 1) {
-                        const divider = document.createElement('div');
-                        divider.className = 'divider';
-                        container.appendChild(divider);
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading writings:', error);
-                document.getElementById('writings-container').innerHTML =
-                    '<div class="loading">Error loading writings. Please check the console.</div>';
-            }
-        }
-
-        // Load writings when page loads
-        loadWritings();
     </script>
 </body>
 </html>
