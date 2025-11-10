@@ -95,32 +95,28 @@
             margin: 60px auto;
             padding: 20px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
         }
 
-        .sections-container ol {
-            list-style-position: inside;
+        /* Section link styling */
+        .section-link {
             display: inline-block;
-            text-align: left;
-        }
-
-        .sections-container li {
-            margin: 20px 0;
-        }
-
-        /* Section word links */
-        .section-word {
-            cursor: pointer;
-            text-decoration: none;
             transition: opacity 0.2s;
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 400;
-            letter-spacing: -0.5px;
-            color: inherit;
+            cursor: pointer;
         }
 
-        /* Hover effects */
-        .section-word:hover {
+        .section-link:hover {
             opacity: 0.6;
+        }
+
+        .section-image {
+            height: 150px;
+            width: auto;
+            display: block;
         }
 
         /* Responsive */
@@ -131,11 +127,11 @@
 
             .sections-container {
                 margin: 40px auto;
-                text-align: center;
+                gap: 20px;
             }
 
-            .section-word {
-                font-size: 40px;
+            .section-image {
+                height: 100px;
             }
 
             .theme-toggle {
@@ -156,11 +152,15 @@
     </button>
 
     <div class="sections-container">
-        <ol>
-            <li><a href="music/index.html" class="section-word">music</a></li>
-            <li><a href="code/index.html" class="section-word">code</a></li>
-            <li><a href="write/index.html" class="section-word">write</a></li>
-        </ol>
+        <a href="code/index.html" class="section-link">
+            <img src="text-code.png" alt="code" class="section-image">
+        </a>
+        <a href="music/index.html" class="section-link">
+            <img src="text-music.png" alt="music" class="section-image">
+        </a>
+        <a href="write/index.html" class="section-link">
+            <img src="text-write.png" alt="write" class="section-image">
+        </a>
     </div>
 
     <script>

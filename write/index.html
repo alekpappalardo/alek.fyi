@@ -63,22 +63,20 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            font-size: clamp(24px, 4vw, 32px);
-            color: #1a1a1a;
-            font-weight: 400;
-            letter-spacing: -1px;
             cursor: pointer;
             transition: opacity 0.2s;
             text-decoration: none;
             z-index: 1000;
-        }
-
-        body.dark-mode .back-button {
-            color: #ffffff;
+            display: block;
         }
 
         .back-button:hover {
             opacity: 0.6;
+        }
+
+        .back-image {
+            height: 60px;
+            width: auto;
         }
 
         .section-title {
@@ -87,17 +85,9 @@
             padding-top: 20px;
         }
 
-        .section-title h2 {
-            font-size: clamp(32px, 5vw, 48px);
-            color: #1a1a1a;
-            font-weight: 400;
-            letter-spacing: -0.5px;
-            display: inline-block;
-            padding: 10px 20px;
-        }
-
-        body.dark-mode .section-title h2 {
-            color: #ffffff;
+        .title-image {
+            height: 120px;
+            width: auto;
         }
 
         @media (max-width: 768px) {
@@ -119,10 +109,12 @@
     </button>
 
     <div class="section-title">
-        <h2>↳write</h2>
+        <img src="../text-write.png" alt="write" class="title-image">
     </div>
 
-    <a href="/" class="back-button">← back</a>
+    <a href="/" class="back-button">
+        <img src="../text-back.png" alt="back" class="back-image">
+    </a>
 
     <script>
         // Theme toggle functionality

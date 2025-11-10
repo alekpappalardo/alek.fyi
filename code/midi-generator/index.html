@@ -123,23 +123,20 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            font-size: clamp(24px, 4vw, 32px);
-            color: #1a1a1a;
-            font-weight: 400;
-            letter-spacing: -1px;
             cursor: pointer;
             transition: opacity 0.2s;
             text-decoration: none;
             z-index: 1000;
-            font-family: 'Times New Roman', Times, serif;
-        }
-
-        body.dark-mode .back-button {
-            color: #ffffff;
+            display: block;
         }
 
         .back-button:hover {
             opacity: 0.6;
+        }
+
+        .back-image {
+            height: 60px;
+            width: auto;
         }
 
         /* Responsive */
@@ -192,7 +189,9 @@
         </div>
     </div>
 
-    <a href="../index.html" class="back-button">← back</a>
+    <a href="../index.html" class="back-button">
+        <img src="../../text-back.png" alt="back" class="back-image">
+    </a>
 
     <script>
         const currentTheme = localStorage.getItem('theme') || 'light';

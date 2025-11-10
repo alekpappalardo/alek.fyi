@@ -64,46 +64,40 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            font-size: clamp(24px, 4vw, 32px);
-            color: #1a1a1a;
-            font-weight: 400;
-            letter-spacing: -1px;
             cursor: pointer;
             transition: opacity 0.2s;
             text-decoration: none;
             z-index: 1000;
-        }
-
-        body.dark-mode .back-button {
-            color: #ffffff;
+            display: block;
         }
 
         .back-button:hover { opacity: 0.6; }
+
+        .back-image {
+            height: 60px;
+            width: auto;
+        }
 
         .section-title {
             text-align: center;
             margin: 30px 0 50px;
         }
 
-        .section-title h2 {
-            font-size: clamp(32px, 5vw, 48px);
-            color: #1a1a1a;
-            font-weight: 400;
-            letter-spacing: -0.5px;
-            display: inline-block;
-            padding: 10px 20px;
+        .title-image {
+            height: 120px;
+            width: auto;
         }
 
-        body.dark-mode .section-title h2 {
-            color: #ffffff;
-        }
-
-        /* Projects container - right-justified horizontal list */
+        /* Projects container - centered vertical list */
         .projects-container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
-            text-align: right;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
         }
 
         /* Project links */
@@ -111,12 +105,7 @@
             cursor: pointer;
             transition: opacity 0.2s;
             text-decoration: none;
-            display: inline-block;
-            margin-left: 40px;
-        }
-
-        .project:first-child {
-            margin-left: 0;
+            display: block;
         }
 
         .project:hover {
@@ -125,9 +114,14 @@
 
         .project h3 {
             font-size: clamp(24px, 4vw, 36px);
-            color: inherit;
+            color: #1a1a1a;
             font-weight: 400;
             letter-spacing: -0.5px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body.dark-mode .project h3 {
+            color: #ffffff;
         }
 
         /* Responsive */
@@ -136,17 +130,12 @@
                 font-size: 48px;
             }
 
-            .section-title h2 {
-                font-size: 36px;
+            .title-image {
+                height: 80px;
             }
 
             .projects-container {
-                text-align: center;
-            }
-
-            .project {
-                display: block;
-                margin: 20px 0;
+                gap: 20px;
             }
 
             .project h3 {
@@ -171,7 +160,7 @@
     </button>
 
     <div class="section-title">
-        <h2>↳code</h2>
+        <img src="../text-code.png" alt="code" class="title-image">
     </div>
 
     <div class="projects-container">
@@ -184,7 +173,9 @@
         </a>
     </div>
 
-    <a href="/" class="back-button">← back</a>
+    <a href="/" class="back-button">
+        <img src="../text-back.png" alt="back" class="back-image">
+    </a>
 
     <script>
         const currentTheme = localStorage.getItem('theme') || 'light';
